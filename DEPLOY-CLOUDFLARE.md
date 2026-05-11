@@ -74,10 +74,12 @@ git push -u origin main
 | Framework preset | **None**（不要選 Astro preset，避免它自作主張） |
 | Build command | `npm run build` |
 | Build output directory | `dist` |
-| Root directory (advanced) | `yutaifund_web_v1` |
+| Root directory (advanced) | **留空白**（repo 根就是專案根，不要填 `yutaifund_web_v1`，那是本機路徑） |
 
-> **為什麼 Root directory 要填 `yutaifund_web_v1`？**
-> 因為這個 repo 的根結構是 `yutaifund-web/yutaifund_web_v1/...`。如果未來把專案搬到 repo 根目錄，就把這欄留空。
+> **為什麼 Root directory 要留空？**
+> 因為當初 git init 是在 `yutaifund_web_v1/` 資料夾直接執行，所以這個資料夾本身就是 repo 根。GitHub 上看到的是 `src/` `docs/` `studio/` 等直接在 root，沒有 `yutaifund_web_v1/` 這層。
+>
+> 如果填 `yutaifund_web_v1`，Cloudflare 會找不到資料夾而 build 失敗（錯誤：`Cannot find cwd: /opt/buildhome/repo/yutaifund_web_v1`）。
 
 #### 環境變數（**必填**）
 
