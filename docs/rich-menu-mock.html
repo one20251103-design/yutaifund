@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>鈺泰發 LINE Rich Menu — 2500×843 主視覺</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #2a2a2a;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: #FAF7F0;
+  }
+  body {
+    padding: 40px;
+    min-height: 100vh;
+  }
+  .instructions {
+    max-width: 900px;
+    margin: 0 auto 40px;
+    padding: 24px;
+    background: #1A1A1A;
+    border-left: 4px solid #B89855;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .instructions h2 {
+    font-family: 'Noto Serif TC', serif;
+    color: #B89855;
+    font-size: 18px;
+    margin-bottom: 12px;
+    letter-spacing: 0.1em;
+  }
+  .instructions code {
+    background: #333;
+    padding: 2px 8px;
+    border-radius: 3px;
+    color: #C8A765;
+    font-family: monospace;
+  }
+  .canvas-wrapper {
+    margin: 0 auto;
+    overflow: auto;
+  }
+
+  /* ========== 鈺泰發 LINE Rich Menu ========== */
+  /* 標準尺寸：2500 × 843（LINE 官方最大規格） */
+  .rich-menu {
+    width: 2500px;
+    height: 843px;
+    background: linear-gradient(135deg, #1A1A1A 0%, #0d0d0d 50%, #1A1A1A 100%);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    position: relative;
+    margin: 0 auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
+
+  /* 隱微的金色織紋（中央交叉線） */
+  .rich-menu::before,
+  .rich-menu::after {
+    content: '';
+    position: absolute;
+    background: linear-gradient(180deg, transparent 0%, rgba(184, 152, 85, 0.15) 50%, transparent 100%);
+    pointer-events: none;
+    z-index: 10;
+  }
+  .rich-menu::before {
+    left: 33.33%;
+    top: 0;
+    width: 1px;
+    height: 100%;
+  }
+  .rich-menu::after {
+    left: 66.66%;
+    top: 0;
+    width: 1px;
+    height: 100%;
+  }
+
+  /* 水平分隔線 */
+  .row-divider {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(184, 152, 85, 0.25) 30%, rgba(184, 152, 85, 0.25) 70%, transparent 100%);
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 40px;
+    position: relative;
+    transition: background 0.3s ease;
+  }
+
+  .cell::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(184, 152, 85, 0.08) 0%, transparent 70%);
+    transition: all 0.3s ease;
+  }
+
+  .icon-wrapper {
+    width: 130px;
+    height: 130px;
+    border: 1.5px solid rgba(184, 152, 85, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    background: radial-gradient(circle at center, rgba(184, 152, 85, 0.05) 0%, transparent 70%);
+    position: relative;
+  }
+
+  .icon-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(184, 152, 85, 0.15);
+  }
+
+  .icon-wrapper svg {
+    width: 60px;
+    height: 60px;
+    stroke: #B89855;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 38px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: #FAF7F0;
+    margin-bottom: 10px;
+    text-indent: 0.25em;
+  }
+
+  .subtitle {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: rgba(250, 247, 240, 0.55);
+    text-indent: 0.15em;
+  }
+
+  /* 角落金色點綴 */
+  .cell::after {
+    content: '';
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 4px;
+    height: 4px;
+    background: #B89855;
+    border-radius: 50%;
+    opacity: 0.4;
+  }
+
+  /* ========== END Rich Menu ========== */
+
+  /* 預覽縮圖（小張版本給快速確認用） */
+  .preview-mini {
+    margin: 60px auto 0;
+    width: 750px;
+    transform-origin: top center;
+  }
+  .preview-mini h3 {
+    font-family: 'Noto Serif TC', serif;
+    color: #B89855;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 0.15em;
+    font-size: 16px;
+  }
+  .preview-mini .rich-menu {
+    transform: scale(0.3);
+    transform-origin: top left;
+    margin-bottom: -590px;
+    width: 2500px;
+  }
+  .preview-mini-frame {
+    width: 750px;
+    height: 253px;
+    overflow: hidden;
+  }
+</style>
+</head>
+<body>
+
+<div class="instructions">
+  <h2>📸 截圖匯出步驟（給 Hank）</h2>
+  <p><strong>方法 A：Chrome / Edge 開發者工具截圖（推薦）</strong></p>
+  <ol style="margin-left: 24px; line-height: 2;">
+    <li>在 Chrome / Edge 開這個檔案</li>
+    <li>按 <code>F12</code> 開啟開發者工具</li>
+    <li>按 <code>Ctrl + Shift + M</code> 切換到裝置模擬模式</li>
+    <li>上方 dimensions 改成 <code>Responsive</code>，輸入寬 <code>2500</code> 高 <code>843</code></li>
+    <li>右上方 <code>⋮</code>（三點選單）→ <strong>Capture full size screenshot</strong></li>
+    <li>得到的 PNG 直接上傳到 LINE OA Manager → Rich Menu</li>
+  </ol>
+
+  <p style="margin-top: 16px;"><strong>方法 B：直接視窗截圖（簡單但解析度可能不夠）</strong></p>
+  <ol style="margin-left: 24px; line-height: 2;">
+    <li>把瀏覽器視窗拉到最大</li>
+    <li>用 Windows Snipping Tool (<code>Shift + Win + S</code>) 框選下方主視覺</li>
+    <li>儲存後用線上工具放大到 2500×843</li>
+  </ol>
+
+  <p style="margin-top: 16px; color: #B89855;">⚠️ <strong>LINE 規格要求</strong>：寬 2500 × 高 843（最大版），檔案 1MB 內，PNG / JPG 皆可。</p>
+</div>
+
+<!-- ============== 主視覺 (實際 1:1) ============== -->
+<div class="canvas-wrapper">
+  <div class="rich-menu" id="richmenu">
+
+    <div class="row-divider"></div>
+
+    <!-- ① 線上諮詢 -->
+    <div class="cell" style="grid-column: 1; grid-row: 1;">
+      <div class="icon-wrapper">
+        <!-- chat bubble icon -->
+        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </div>
+      <div class="title">線上諮詢</div>
+      <div class="subtitle">ONLINE CONSULTING</div>
+    </div>
+
+    <!-- ② 案例瀏覽 -->
+    <div class="cell" style="grid-column: 2; grid-row: 1;">
+      <div class="icon-wrapper">
+        <!-- house icon -->
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="title">案例瀏覽</div>
+      <div class="subtitle">PORTFOLIO</div>
+    </div>
+
+    <!-- ③ 專業服務 -->
+    <div class="cell" style="grid-column: 3; grid-row: 1;">
+      <div class="icon-wrapper">
+        <!-- briefcase icon -->
+        <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      </div>
+      <div class="title">專業服務</div>
+      <div class="subtitle">OUR SERVICES</div>
+    </div>
+
+    <!-- ④ 買房指南 -->
+    <div class="cell" style="grid-column: 1; grid-row: 2;">
+      <div class="icon-wrapper">
+        <!-- book icon -->
+        <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      </div>
+      <div class="title">買房指南</div>
+      <div class="subtitle">BUYER'S GUIDE</div>
+    </div>
+
+    <!-- ⑤ 最新消息 -->
+    <div class="cell" style="grid-column: 2; grid-row: 2;">
+      <div class="icon-wrapper">
+        <!-- newspaper icon -->
+        <svg viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6z"/></svg>
+      </div>
+      <div class="title">最新消息</div>
+      <div class="subtitle">NEWS</div>
+    </div>
+
+    <!-- ⑥ 聯絡資訊 -->
+    <div class="cell" style="grid-column: 3; grid-row: 2;">
+      <div class="icon-wrapper">
+        <!-- phone icon -->
+        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </div>
+      <div class="title">聯絡資訊</div>
+      <div class="subtitle">CONTACT</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============== 縮圖預覽 ============== -->
+<div class="preview-mini">
+  <h3>— LINE 顯示時的縮圖預覽 —</h3>
+  <div class="preview-mini-frame">
+    <!-- 縮放版（用同 markup，視覺上參考用） -->
+    <div style="transform: scale(0.3); transform-origin: top left; width: 2500px; height: 843px;">
+      <div style="width: 2500px; height: 843px; background: linear-gradient(135deg, #1A1A1A 0%, #0d0d0d 50%, #1A1A1A 100%); display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); position: relative;">
+        <!-- 用 emoji 代替 svg 給縮圖快速看 -->
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; color:#FAF7F0;">
+          <div style="font-size:60px; margin-bottom:20px;">💬</div>
+          <div style="font-family:'Noto Serif TC',serif; font-size:38px; letter-spacing:0.25em; color:#FAF7F0;">線上諮詢</div>
+          <div style="font-size:18px; color:rgba(250,247,240,0.55); margin-top:10px; letter-spacing:0.15em;">ONLINE CONSULTING</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; color:#FAF7F0;">
+          <div style="font-size:60px; margin-bottom:20px;">🏘</div>
+          <div style="font-family:'Noto Serif TC',serif; font-size:38px; letter-spacing:0.25em; color:#FAF7F0;">案例瀏覽</div>
+          <div style="font-size:18px; color:rgba(250,247,240,0.55); margin-top:10px; letter-spacing:0.15em;">PORTFOLIO</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; color:#FAF7F0;">
+          <div style="font-size:60px; margin-bottom:20px;">💼</div>
+          <div style="font-family:'Noto Serif TC',serif; font-size:38px; letter-spacing:0.25em; color:#FAF7F0;">專業服務</div>
+          <div style="font-size:18px; color:rgba(250,247,240,0.55); margin-top:10px; letter-spacing:0.15em;">OUR SERVICES</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; color:#FAF7F0;">
+          <div style="font-size:60px; margin-bottom:20px;">📖</div>
+          <div style="font-family:'Noto Serif TC',serif; font-size:38px; letter-spacing:0.25em; color:#FAF7F0;">買房指南</div>
+          <div style="font-size:18px; color:rgba(250,247,240,0.55); margin-top:10px; letter-spacing:0.15em;">BUYER'S GUIDE</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; color:#FAF7F0;">
+          <div style="font-size:60px; margin-bottom:20px;">📰</div>
+          <div style="font-family:'Noto Serif TC',serif; font-size:38px; letter-spacing:0.25em; color:#FAF7F0;">最新消息</div>
+          <div style="font-size:18px; color:rgba(250,247,240,0.55); margin-top:10px; letter-spacing:0.15em;">NEWS</div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px; color:#FAF7F0;">
+          <div style="font-size:60px; margin-bottom:20px;">📞</div>
+          <div style="font-family:'Noto Serif TC',serif; font-size:38px; letter-spacing:0.25em; color:#FAF7F0;">聯絡資訊</div>
+          <div style="font-size:18px; color:rgba(250,247,240,0.55); margin-top:10px; letter-spacing:0.15em;">CONTACT</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="instructions" style="margin-top: 100px;">
+  <h2>🎨 設計說明（給 Hank / 鈺泰發看）</h2>
+  <ul style="margin-left: 24px; line-height: 2;">
+    <li><strong>主色配比</strong>：深墨 <code>#1A1A1A</code>（80%）+ 古典金 <code>#B89855</code>（15% 點綴）+ 米白 <code>#FAF7F0</code>（5% 文字）</li>
+    <li><strong>字體</strong>：標題用 <strong>Noto Serif TC</strong>（思源宋體 / 襯線中字）→ 房地產業專業 + 古典氣質</li>
+    <li><strong>副標</strong>：英文 ALL CAPS + Noto Sans TC → 現代感平衡</li>
+    <li><strong>圖示</strong>：細線條（stroke 1.8）金色 SVG，全部統一風格</li>
+    <li><strong>圓圈外框</strong>：金色 1.5px + 外圈 1px 雙線 → 高級感 / 不過度裝飾</li>
+    <li><strong>分隔線</strong>：中央十字金線（透明度 25%），低調分區</li>
+    <li><strong>右上角金點</strong>：每格獨立性提示，整體節奏統一</li>
+  </ul>
+
+  <p style="margin-top: 16px;">
+    <strong>為什麼選這個設計方向？</strong>
+    宜蘭房地產競品（揚京 / 搜博代工）的圖文選單普遍是「卡通 emoji + 鮮豔配色」，
+    走「**深墨 + 古典金 + 襯線中字**」這條線可以瞬間拉開檔次，呼應鈺泰發
+    「鈺泰用心、購屋安心、建商放心」的穩重訴求。
+  </p>
+</div>
+
+</body>
+</html>

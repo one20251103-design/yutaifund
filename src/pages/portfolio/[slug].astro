@@ -1,0 +1,134 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import LineShareButton from '~/components/LineShareButton.tsx';
+import RichBody from '~/components/RichBody.astro';
+import { getPortfolioList, getPortfolioBySlug } from '~/lib/content';
+import { SITE } from '~/lib/site';
+
+export async function getStaticPaths() {
+  const projects = await getPortfolioList();
+  return projects.map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+const project = await getPortfolioBySlug(slug!);
+if (!project) return Astro.redirect('/portfolio');
+const shareUrl = new URL(`/portfolio/${project.slug}`, SITE.url).toString();
+---
+
+<BaseLayout
+  title={project.title}
+  description={project.excerpt}
+  ogImage={project.coverImage}
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '建案精選', href: '/portfolio' },
+    { name: project.title, href: `/portfolio/${project.slug}` },
+  ]}
+  listing={{
+    name: project.title,
+    description: project.excerpt,
+    image: project.coverImage,
+    location: project.location,
+    propertyType: project.category === 'new' ? '新成屋' : '中古屋',
+  }}
+>
+
+  <!-- Hero 圖 -->
+  <section class="pt-20">
+    <div class="relative w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-[var(--color-cream-100)]">
+      <img
+        src={project.coverImage}
+        alt={`${project.title} - ${project.location}`}
+        class="w-full h-full object-cover"
+        fetchpriority="high"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-ink-900)]/50 to-transparent"></div>
+    </div>
+  </section>
+
+  <!-- 內容 -->
+  <article class="py-16 lg:py-24">
+    <div class="container-custom max-w-4xl">
+      <div class="flex flex-wrap gap-3 mb-6">
+        <span class="inline-block px-3 py-1 text-xs tracking-widest text-white bg-[var(--color-gold-500)] rounded-full">
+          {project.category === 'new' ? '新成屋' : '中古屋'}
+        </span>
+        {project.status && (
+          <span class="inline-block px-3 py-1 text-xs tracking-widest text-[var(--color-ink-700)] border border-[var(--color-gold-300)] rounded-full">
+            {project.status}
+          </span>
+        )}
+        {project.isConcept && (
+          <span class="inline-block px-3 py-1 text-xs tracking-widest text-[var(--color-ink-500)] bg-[var(--color-cream-100)] rounded-full">
+            Concept Study
+          </span>
+        )}
+      </div>
+
+      <p class="text-sm tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        {project.location}
+      </p>
+
+      <h1 class="text-3xl md:text-5xl font-light tracking-wide text-[var(--color-ink-900)] mb-8 leading-tight">
+        {project.title}
+      </h1>
+
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] leading-relaxed mb-12">
+        {project.excerpt}
+      </p>
+
+      {project.body && (
+        <div class="mb-12">
+          <RichBody body={project.body} />
+        </div>
+      )}
+
+      {project.gallery && project.gallery.length > 0 && (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          {project.gallery.map((url) => (
+            <div class="aspect-[4/3] overflow-hidden">
+              <img src={url} alt={project.title} class="w-full h-full object-cover" loading="lazy" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {project.isConcept && (
+        <div class="my-12 p-6 border-l-2 border-[var(--color-gold-400)] bg-[var(--color-cream-50)]">
+          <p class="text-xs tracking-widest text-[var(--color-gold-500)] font-display mb-2">
+            CONCEPT STUDY
+          </p>
+          <p class="text-sm text-[var(--color-ink-700)] leading-relaxed">
+            本案例為服務概念示範（Concept Study），用以說明鈺泰發在類似物件類型上的代銷思路與服務流程，並非實際代銷案場。實際物件資料將陸續從 CMS 串接更新。
+          </p>
+        </div>
+      )}
+
+      <!-- Share -->
+      <div class="mt-16 pt-8 border-t border-[var(--color-gold-200)]/40 flex flex-wrap items-center gap-4">
+        <p class="text-sm text-[var(--color-ink-500)] tracking-wider">分享給朋友：</p>
+        <LineShareButton client:idle title={project.title} url={shareUrl} />
+        <a
+          href="/contact"
+          class="inline-flex items-center gap-2 px-5 py-2.5 border border-[var(--color-gold-300)] text-[var(--color-ink-700)] hover:bg-[var(--color-cream-50)] text-sm tracking-wider rounded-full transition-colors"
+        >
+          諮詢類似物件
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <!-- 回列表 -->
+  <section class="pb-24 lg:pb-32">
+    <div class="container-custom max-w-4xl">
+      <a
+        href="/portfolio"
+        class="inline-flex items-center gap-2 text-sm tracking-wider text-[var(--color-ink-500)] hover:text-[var(--color-gold-500)] transition-colors"
+      >
+        <span aria-hidden="true">←</span>
+        回到所有案例
+      </a>
+    </div>
+  </section>
+</BaseLayout>

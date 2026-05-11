@@ -1,0 +1,352 @@
+{
+  "name": "Formspree → Email → LINE Push（鈺泰發官網表單通知）",
+  "flow": [
+    {
+      "id": 1,
+      "module": "google-email:ActionWatchEmails",
+      "version": 2,
+      "parameters": {
+        "__IMTCONN__": null,
+        "folder": "INBOX",
+        "criteria": "FROM_FORMSPREE",
+        "markSeen": true,
+        "maxResults": 1
+      },
+      "filter": {
+        "name": "只處理 Formspree 通知信",
+        "conditions": [
+          [
+            {
+              "a": "{{1.from.address}}",
+              "b": "@formspree.io",
+              "o": "text:contains"
+            },
+            {
+              "a": "{{1.subject}}",
+              "b": "New submission",
+              "o": "text:contains"
+            }
+          ]
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0
+        },
+        "restore": {
+          "parameters": {
+            "criteria": {
+              "label": "未讀且符合條件",
+              "nested": []
+            },
+            "folder": {
+              "mode": "chose",
+              "path": ["INBOX"]
+            },
+            "__IMTCONN__": {
+              "label": "[請連結你的 Gmail（收 Formspree 通知的那個）]"
+            }
+          }
+        },
+        "expect": [
+          {
+            "name": "folder",
+            "type": "folder",
+            "label": "收件匣",
+            "required": true
+          },
+          {
+            "name": "criteria",
+            "type": "select",
+            "label": "篩選條件",
+            "required": true
+          },
+          {
+            "name": "maxResults",
+            "type": "uinteger",
+            "label": "每次掃幾封",
+            "validate": {
+              "max": 100,
+              "min": 1
+            }
+          },
+          {
+            "name": "markSeen",
+            "type": "boolean",
+            "label": "處理後標為已讀",
+            "required": true
+          }
+        ]
+      },
+      "comment": "STEP 1：監聽 Gmail 收到 Formspree 的新通知信。\n\n設定方法：\n1. 點此模組左下「Add」連結你的 Gmail（一方圓 Gmail）\n2. 「Folder」選 INBOX\n3. 「Criteria」可以選「Read all email」第一次測試後改成「Only unread mails」更省 ops\n4. 「Max number of results」設 5（一次處理最多 5 封）"
+    },
+    {
+      "id": 2,
+      "module": "util:TextParser",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "pattern": "name:\\s*(?<name>[^\\n]+)[\\s\\S]*?phone:\\s*(?<phone>[^\\n]+)[\\s\\S]*?email:\\s*(?<email>[^\\n]+)[\\s\\S]*?message:\\s*(?<message>[\\s\\S]+?)(?:\\n--|$)",
+        "text": "{{1.text.content}}",
+        "global": false,
+        "ignorecase": true,
+        "multiline": true,
+        "newlinecharacter": true,
+        "matchall": false
+      },
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        },
+        "expect": [
+          {
+            "name": "pattern",
+            "type": "text",
+            "label": "Regex Pattern",
+            "required": true
+          }
+        ]
+      },
+      "comment": "STEP 2：解析信件內文，抓出客戶姓名 / 電話 / Email / 留言。\n\nFormspree 信件預設格式：\n  name: 王小明\n  phone: 0912345678\n  email: customer@gmail.com\n  message: 想問礁溪的物件\n\n如果你的表單欄位不同，請依實際信件內文修改 pattern 的 named groups。\n\n👉 提示：跑一次 scenario，到 Make.com History → 點開最近一筆 → 看 Email 模組的 output → 複製 text.content 內容，照那個格式調 regex。"
+    },
+    {
+      "id": 3,
+      "module": "linecorp-line:CreateMessage",
+      "version": 1,
+      "parameters": {
+        "__IMTCONN__": null
+      },
+      "mapper": {
+        "to": "REPLACE_WITH_HANK_LINE_USER_ID",
+        "messages": [
+          {
+            "type": "flex",
+            "altText": "🏠 鈺泰發官網表單 - 來自 {{2.name}}",
+            "contents": {
+              "type": "bubble",
+              "size": "kilo",
+              "header": {
+                "type": "box",
+                "layout": "vertical",
+                "backgroundColor": "#1A1A1A",
+                "paddingAll": "16px",
+                "contents": [
+                  {
+                    "type": "text",
+                    "text": "🏠 新表單通知",
+                    "color": "#B89855",
+                    "weight": "bold",
+                    "size": "sm"
+                  },
+                  {
+                    "type": "text",
+                    "text": "鈺泰發行銷官網",
+                    "color": "#FAF7F0",
+                    "size": "xs",
+                    "margin": "sm"
+                  }
+                ]
+              },
+              "body": {
+                "type": "box",
+                "layout": "vertical",
+                "spacing": "md",
+                "paddingAll": "16px",
+                "contents": [
+                  {
+                    "type": "box",
+                    "layout": "baseline",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "姓名",
+                        "color": "#888888",
+                        "size": "sm",
+                        "flex": 2
+                      },
+                      {
+                        "type": "text",
+                        "text": "{{2.name}}",
+                        "color": "#1A1A1A",
+                        "size": "sm",
+                        "flex": 5,
+                        "weight": "bold",
+                        "wrap": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "box",
+                    "layout": "baseline",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "電話",
+                        "color": "#888888",
+                        "size": "sm",
+                        "flex": 2
+                      },
+                      {
+                        "type": "text",
+                        "text": "{{2.phone}}",
+                        "color": "#1A1A1A",
+                        "size": "sm",
+                        "flex": 5,
+                        "wrap": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "box",
+                    "layout": "baseline",
+                    "contents": [
+                      {
+                        "type": "text",
+                        "text": "Email",
+                        "color": "#888888",
+                        "size": "sm",
+                        "flex": 2
+                      },
+                      {
+                        "type": "text",
+                        "text": "{{2.email}}",
+                        "color": "#1A1A1A",
+                        "size": "sm",
+                        "flex": 5,
+                        "wrap": true
+                      }
+                    ]
+                  },
+                  {
+                    "type": "separator",
+                    "margin": "md"
+                  },
+                  {
+                    "type": "text",
+                    "text": "留言",
+                    "color": "#888888",
+                    "size": "sm",
+                    "margin": "md"
+                  },
+                  {
+                    "type": "text",
+                    "text": "{{2.message}}",
+                    "color": "#333333",
+                    "size": "sm",
+                    "wrap": true,
+                    "margin": "sm"
+                  }
+                ]
+              },
+              "footer": {
+                "type": "box",
+                "layout": "vertical",
+                "paddingAll": "12px",
+                "contents": [
+                  {
+                    "type": "button",
+                    "style": "primary",
+                    "color": "#B89855",
+                    "height": "sm",
+                    "action": {
+                      "type": "uri",
+                      "label": "📞 直接撥打",
+                      "uri": "tel:{{2.phone}}"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "metadata": {
+        "designer": {
+          "x": 600,
+          "y": 0
+        },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "[請連結 LINE Messaging API（鈺泰發 OA 的 Channel Access Token）]"
+            }
+          }
+        },
+        "expect": [
+          {
+            "name": "to",
+            "type": "text",
+            "label": "User ID（接收者）",
+            "required": true
+          },
+          {
+            "name": "messages",
+            "type": "array",
+            "label": "訊息陣列",
+            "required": true
+          }
+        ]
+      },
+      "comment": "STEP 3：把解析好的客戶資料用 LINE Flex Message 推給 Hank。\n\n設定方法：\n1. 點此模組左下「Add」→ 新增 LINE 連線\n2. 填入「Channel Access Token」（從你的密碼管理器讀，OA 的長期 token）\n3. 把上方 mapper 裡的 REPLACE_WITH_HANK_LINE_USER_ID 換成你的 LINE User ID（U 開頭 33 字元）\n4. 訊息會長這樣：\n   ┌──────────────┐\n   │ 🏠 新表單通知 │ ← 金色 + 深色 header\n   ├──────────────┤\n   │ 姓名 王小明    │\n   │ 電話 09xxx    │\n   │ Email xxx    │\n   │ 留言 想問礁溪 │\n   ├──────────────┤\n   │ [📞 直接撥打] │ ← 點就撥號\n   └──────────────┘"
+    }
+  ],
+  "metadata": {
+    "instant": false,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "zone": "eu1.make.com",
+    "notes": [
+      "==========================================================",
+      "鈺泰發官網表單 → LINE 通知 自動化 scenario",
+      "==========================================================",
+      "",
+      "【架構】",
+      "Formspree 表單送出 → 寄信到 Gmail → Make.com 抓信 → 解析 → LINE Push",
+      "",
+      "【為什麼走 Gmail Watcher 而非 Formspree Webhook】",
+      "Formspree 免費版的 Webhook 是付費功能 (Plus plan)。",
+      "用 Gmail Watcher 完全免費，且不依賴 Formspree 升級。",
+      "缺點：延遲約 1-3 分鐘（Make.com Gmail 模組輪詢頻率），不是即時。",
+      "      → 對「客戶填表單通知業務」這個情境完全可接受。",
+      "",
+      "【Import 步驟】",
+      "1. Make.com 左側 Scenarios → + Create a new scenario",
+      "2. 進去後右上角 ⋯ → Import Blueprint → 上傳這個 JSON",
+      "3. 依序設定 3 個模組：",
+      "   - Module 1 (Gmail): Add connection → 一方圓 Gmail",
+      "   - Module 3 (LINE): Add connection → 貼一方圓 OA 的 Channel Access Token",
+      "                      to 欄位 → 貼你的 LINE User ID",
+      "4. 右下角 Save → 左下角 Scheduling 切到 ON",
+      "",
+      "【測試方法】",
+      "1. 開鈺泰發網站 /contact 頁",
+      "2. 填一筆假表單送出",
+      "3. 等 1-3 分鐘，看你的 LINE 是否收到 Flex Message",
+      "4. 如沒收到：Make.com → 該 scenario → History → 看哪一步紅燈",
+      "",
+      "【常見錯誤】",
+      "- Text Parser 沒抓到欄位 → Formspree 信件格式跟 regex 對不上，去看一次實際郵件內容調整",
+      "- LINE 403 Forbidden → User ID 是「別個 OA」看到的，要用「鈺泰發 OA」看到你的 User ID",
+      "- LINE 400 Bad Request → Flex Message JSON 有錯字，回原模板複製貼上",
+      "",
+      "【搬遷給鈺泰發時】",
+      "Make.com → 該 scenario → ⋯ → Export Blueprint → 給鈺泰發 import",
+      "（記得先把 Gmail connection / LINE connection 換成鈺泰發的帳號）"
+    ]
+  }
+}

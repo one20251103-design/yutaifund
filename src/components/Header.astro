@@ -1,0 +1,61 @@
+---
+import { NAV_ITEMS, SITE } from '~/lib/site';
+import Logo from './Logo.astro';
+import MobileMenu from './MobileMenu.tsx';
+---
+
+<header
+  id="site-header"
+  class="fixed top-0 left-0 right-0 z-40 transition-all duration-300"
+>
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 h-28 flex items-center justify-between">
+    <a
+      href="/"
+      class="logo-link group inline-flex items-center transition-transform duration-300 hover:scale-[1.03]"
+      aria-label={SITE.fullName}
+      transition:name="site-logo"
+    >
+      <Logo height={88} />
+    </a>
+
+    <nav class="hidden lg:flex items-center gap-8">
+      {NAV_ITEMS.map((item) => (
+        <a
+          href={item.href}
+          class="text-[15px] font-medium tracking-[0.06em] text-[var(--color-ink-700)] hover:text-[var(--color-gold-600)] transition-colors duration-200 relative group"
+        >
+          {item.label}
+          <span class="absolute -bottom-1.5 left-0 w-0 h-[1.5px] bg-[var(--color-gold-500)] group-hover:w-full transition-all duration-300"></span>
+        </a>
+      ))}
+    </nav>
+
+    <MobileMenu client:load />
+  </div>
+</header>
+
+<script>
+  const updateHeader = () => {
+    const header = document.getElementById('site-header');
+    if (!header) return;
+    if (window.scrollY > 20) {
+      header.classList.add('header-scrolled');
+    } else {
+      header.classList.remove('header-scrolled');
+    }
+  };
+
+  document.addEventListener('astro:page-load', () => {
+    updateHeader();
+    window.addEventListener('scroll', updateHeader, { passive: true });
+  });
+</script>
+
+<style>
+  #site-header.header-scrolled {
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    background-color: rgba(251, 249, 244, 0.85);
+    border-bottom: 1px solid rgba(200, 167, 101, 0.14);
+  }
+</style>

@@ -1,0 +1,340 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import ArticleCard from '~/components/ArticleCard.astro';
+import { SITE } from '~/lib/site';
+import { getPortfolioList, getNewsList, getInsightsList } from '~/lib/content';
+
+const HERO_IMAGE =
+  'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1920&q=80&auto=format&fit=crop';
+
+// 從 Sanity 抓資料（沒設 env 自動 fallback 本機假資料）
+const allProjects = await getPortfolioList();
+const featuredProjects = allProjects.filter((p) => p.featured).slice(0, 6);
+// 沒打 featured 的 fallback：取前 3 筆
+const homeProjects = featuredProjects.length > 0 ? featuredProjects : allProjects.slice(0, 3);
+
+const newsAll = await getNewsList();
+const latestNews = newsAll.slice(0, 3);
+
+const insightsAll = await getInsightsList();
+const latestInsights = insightsAll.slice(0, 3);
+---
+
+<BaseLayout>
+  <!-- Hero -->
+  <section class="relative min-h-screen flex items-center overflow-hidden">
+    <!-- 背景圖 -->
+    <div class="absolute inset-0 z-0">
+      <img
+        src={HERO_IMAGE}
+        alt="宜蘭住宅外觀"
+        class="w-full h-full object-cover"
+        fetchpriority="high"
+      />
+      <!-- 左側可讀性遮罩：減弱程度，讓建築露出來 -->
+      <div class="absolute inset-0 bg-gradient-to-r from-[var(--color-cream-100)]/95 via-[var(--color-cream-100)]/70 to-transparent"></div>
+      <!-- 底部漸層：壓住 SCROLL 區域文字 -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--color-cream-100)]/45 to-transparent"></div>
+      <!-- 暖金色微光：抵銷 Unsplash 圖片右側的偏冷藍色調 -->
+      <div class="absolute top-1/3 right-1/4 w-[40rem] h-[40rem] rounded-full bg-[var(--color-gold-200)] opacity-20 blur-3xl"></div>
+    </div>
+
+    <div class="container-custom relative z-10 pt-24 pb-16">
+      <!-- eyebrow + 細金色橫線 視覺錨點 -->
+      <div class="flex items-center gap-4 mb-6 hero-tag">
+        <span class="block w-12 h-px bg-[var(--color-gold-400)]"></span>
+        <p class="text-[11px] tracking-[0.4em] text-[var(--color-gold-600)] font-display font-medium">
+          YU TAI FUND · 鈺泰發行銷
+        </p>
+      </div>
+
+      <h1 class="text-4xl md:text-6xl lg:text-7xl font-light tracking-wide leading-[1.25] text-[var(--color-ink-900)] mb-8 hero-headline">
+        <span class="block">鈺泰用心</span>
+        <span class="block mt-2">購屋安心 <span class="text-[var(--color-gold-500)]">·</span> 建商放心</span>
+      </h1>
+
+      <p class="text-base md:text-lg text-[var(--color-ink-700)] max-w-2xl leading-[1.9] mb-10 hero-sub">
+        宜蘭專業房地產代銷與顧問。新成屋、中古屋一站式服務，<br class="hidden md:block" />讓買家、屋主與建商三方都能安心託付。
+      </p>
+
+      <div class="flex flex-wrap gap-4 hero-cta items-center">
+        <a
+          href="/portfolio"
+          class="inline-flex items-center gap-2 px-8 py-4 bg-[var(--color-gold-500)] hover:bg-[var(--color-gold-600)] text-white text-sm tracking-[0.15em] rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:translate-y-[-1px]"
+        >
+          瀏覽精選建案
+          <span aria-hidden="true" class="inline-block transition-transform group-hover:translate-x-1">→</span>
+        </a>
+        <a
+          href={SITE.lineAddFriendUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-8 py-4 border-[1.5px] border-[var(--color-gold-500)] text-[var(--color-gold-700)] hover:bg-[var(--color-gold-500)] hover:text-white text-sm tracking-[0.15em] rounded-full transition-all duration-300"
+        >
+          LINE 即時諮詢
+        </a>
+      </div>
+    </div>
+
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2 text-[var(--color-ink-500)] text-xs tracking-widest">
+      <span>SCROLL</span>
+      <span class="block w-px h-10 bg-[var(--color-gold-300)] scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- 服務簡介 -->
+  <section class="py-24 lg:py-32">
+    <div class="container-custom">
+      <div class="max-w-2xl mb-16">
+        <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] mb-4 font-display">
+          OUR SERVICES
+        </p>
+        <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+          專業服務內容
+        </h2>
+        <p class="text-base text-[var(--color-ink-500)] leading-relaxed">
+          深耕宜蘭，從新成屋代銷到中古屋買賣，提供完整的房地產交易服務。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          {
+            title: '新成屋代銷',
+            desc: '與在地建商深度合作，為您引介品質與口碑兼備的優質建案。',
+            num: '01',
+            href: '/services#new',
+          },
+          {
+            title: '中古屋買賣',
+            desc: '物件深度盤點、合理估價、誠信媒合，協助屋主與買家順利成交。',
+            num: '02',
+            href: '/services#used',
+          },
+          {
+            title: '購屋諮詢',
+            desc: '從資金規劃、地段選擇到合約審閱，提供一站式專業諮詢服務。',
+            num: '03',
+            href: '/services#consult',
+          },
+        ].map((item) => (
+          <a
+            href={item.href}
+            class="group p-8 bg-[var(--color-cream-50)] hover:bg-white border border-[var(--color-gold-200)]/40 rounded-sm transition-all duration-500 block"
+          >
+            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-6">
+              {item.num}
+            </p>
+            <h3 class="text-xl font-medium text-[var(--color-ink-900)] mb-4 tracking-wider">
+              {item.title}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+              {item.desc}
+            </p>
+            <div class="mt-8 flex items-center gap-2 text-xs text-[var(--color-gold-500)] tracking-widest opacity-60 group-hover:opacity-100 transition-opacity duration-500">
+              了解更多
+              <span aria-hidden="true">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 精選建案 -->
+  <section class="py-24 lg:py-32 bg-[var(--color-cream-50)]">
+    <div class="container-custom">
+      <div class="flex items-end justify-between mb-16">
+        <div>
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] mb-4 font-display">
+            FEATURED
+          </p>
+          <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)]">
+            精選建案
+          </h2>
+        </div>
+        <a
+          href="/portfolio"
+          class="text-sm tracking-wider text-[var(--color-ink-700)] hover:text-[var(--color-gold-500)] transition-colors hidden md:inline-flex items-center gap-2"
+        >
+          全部建案
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {homeProjects.map((project) => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+
+      <p class="mt-12 text-xs text-[var(--color-ink-500)] text-center tracking-wider">
+        以上為服務概念示範。真實案場資料將陸續從 CMS 串接更新。
+      </p>
+    </div>
+  </section>
+
+  <!-- 最新消息 + 買房指南 -->
+  <section class="py-24 lg:py-32">
+    <div class="container-custom">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        <!-- 最新消息 -->
+        <div>
+          <div class="flex items-end justify-between mb-12">
+            <div>
+              <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] mb-3 font-display">
+                NEWS
+              </p>
+              <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)]">
+                最新消息
+              </h2>
+            </div>
+            <a
+              href="/news"
+              class="text-xs tracking-wider text-[var(--color-ink-500)] hover:text-[var(--color-gold-500)] transition-colors"
+            >
+              全部 →
+            </a>
+          </div>
+
+          <div class="space-y-8">
+            {latestNews.map((item) => (
+              <a href={`/news/${item.slug}`} class="group block">
+                <p class="text-xs tracking-widest text-[var(--color-ink-500)] mb-2">
+                  {item.publishedAt.replace(/-/g, '.')}
+                </p>
+                <h3 class="text-base font-medium text-[var(--color-ink-900)] tracking-wide mb-2 group-hover:text-[var(--color-gold-500)] transition-colors">
+                  {item.title}
+                </h3>
+                <p class="text-sm text-[var(--color-ink-500)] leading-relaxed line-clamp-2">
+                  {item.excerpt}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <!-- 買房指南 -->
+        <div>
+          <div class="flex items-end justify-between mb-12">
+            <div>
+              <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] mb-3 font-display">
+                INSIGHTS
+              </p>
+              <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)]">
+                買房指南
+              </h2>
+            </div>
+            <a
+              href="/insights"
+              class="text-xs tracking-wider text-[var(--color-ink-500)] hover:text-[var(--color-gold-500)] transition-colors"
+            >
+              全部 →
+            </a>
+          </div>
+
+          <div class="space-y-8">
+            {latestInsights.map((item) => (
+              <a href={`/insights/${item.slug}`} class="group block">
+                <div class="flex items-center gap-3 text-xs tracking-widest text-[var(--color-ink-500)] mb-2">
+                  <time>{item.publishedAt.replace(/-/g, '.')}</time>
+                  <span class="text-[var(--color-gold-300)]">·</span>
+                  <span class="text-[var(--color-gold-500)]">{item.category}</span>
+                </div>
+                <h3 class="text-base font-medium text-[var(--color-ink-900)] tracking-wide mb-2 group-hover:text-[var(--color-gold-500)] transition-colors leading-snug">
+                  {item.title}
+                </h3>
+                <p class="text-sm text-[var(--color-ink-500)] leading-relaxed line-clamp-2">
+                  {item.excerpt}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 lg:py-32 bg-[var(--color-cream-50)] border-y border-[var(--color-gold-200)]/30">
+    <div class="container-custom max-w-3xl text-center">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] mb-4 font-display">
+        START NOW
+      </p>
+      <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        開始您的安心購屋旅程
+      </h2>
+      <p class="text-base text-[var(--color-ink-500)] leading-relaxed mb-10 max-w-2xl mx-auto">
+        無論您是首次購屋、置產投資，或是想要轉售物件，我們都歡迎與您聊聊。
+      </p>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a
+          href="/contact"
+          class="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--color-gold-400)] hover:bg-[var(--color-gold-500)] text-white text-sm tracking-wider rounded-full transition-colors"
+        >
+          填寫諮詢表單
+        </a>
+        <a
+          href={SITE.lineAddFriendUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-7 py-3.5 text-white text-sm tracking-wider rounded-full transition-colors"
+          style="background-color: #06C755"
+        >
+          加入 LINE 諮詢
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-glow {
+    background: radial-gradient(circle, rgba(200, 167, 101, 0.5) 0%, transparent 70%);
+    animation: glow-pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
+  }
+
+  .hero-tag,
+  .hero-headline,
+  .hero-sub,
+  .hero-cta {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fade-up 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .hero-tag { animation-delay: 0.1s; }
+  .hero-headline { animation-delay: 0.25s; }
+  .hero-sub { animation-delay: 0.45s; }
+  .hero-cta { animation-delay: 0.6s; }
+
+  @keyframes fade-up {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .scroll-line {
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent, var(--color-gold-500), transparent);
+    animation: scroll-down 2.4s ease-in-out infinite;
+  }
+
+  @keyframes scroll-down {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+</style>

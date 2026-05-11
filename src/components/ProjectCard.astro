@@ -1,0 +1,63 @@
+---
+import type { Project } from '~/data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<a
+  href={`/portfolio/${project.slug}`}
+  class="group block reveal"
+  data-cursor-reveal="查看建案"
+>
+  <div class="relative aspect-[4/5] overflow-hidden bg-[var(--color-mist-100)] mb-6">
+    <img
+      src={project.coverImage}
+      alt={`${project.title} - ${project.location}`}
+      class="image-zoom-slow w-full h-full object-cover"
+      loading="lazy"
+    />
+
+    <!-- 細邊覆蓋（增加精緻感） -->
+    <div class="absolute inset-0 border-hairline border-[var(--color-mist-200)] pointer-events-none"></div>
+
+    <!-- 分類標籤 -->
+    <div class="absolute top-5 left-5">
+      <span class="inline-block px-3 py-1.5 text-[10px] tracking-[0.3em] text-white bg-[var(--color-navy-700)]/90 backdrop-blur-sm uppercase">
+        {project.category === 'new' ? 'New' : 'Resale'}
+      </span>
+    </div>
+
+    <!-- 狀態標籤 -->
+    {project.status && (
+      <div class="absolute top-5 right-5">
+        <span class="inline-block px-3 py-1.5 text-[10px] tracking-[0.25em] text-[var(--color-ink-900)] bg-white/95 backdrop-blur-sm">
+          {project.status}
+        </span>
+      </div>
+    )}
+
+    {project.isConcept && (
+      <div class="absolute bottom-5 left-5">
+        <span class="inline-block px-2.5 py-1 text-[9px] tracking-[0.3em] text-[var(--color-ink-500)] bg-white/90 uppercase">
+          Concept
+        </span>
+      </div>
+    )}
+  </div>
+
+  <div>
+    <p class="text-xs tracking-[0.35em] text-[var(--color-gold-500)] font-display mb-3 uppercase">
+      {project.location}
+    </p>
+    <h3 class="text-xl text-[var(--color-ink-900)] mb-3 leading-snug group-hover:text-[var(--color-navy-700)] transition-colors duration-700">
+      {project.title}
+    </h3>
+    <p class="text-sm text-[var(--color-ink-500)] leading-relaxed line-clamp-2 font-sans-tc">
+      {project.excerpt}
+    </p>
+  </div>
+</a>

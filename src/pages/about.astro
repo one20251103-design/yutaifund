@@ -1,0 +1,143 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+
+const ABOUT_HERO =
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80&auto=format&fit=crop';
+const ABOUT_OFFICE =
+  'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1200&q=80&auto=format&fit=crop';
+---
+
+<BaseLayout
+  title="關於我們"
+  description="鈺泰發行銷有限公司，深耕宜蘭房地產市場，專業提供新成屋代銷與中古屋買賣服務，以「安心」為核心理念。"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '關於我們', href: '/about' },
+  ]}
+>
+  <!-- Hero -->
+  <section class="pt-32 pb-16 lg:pb-24">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+        ABOUT US
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8 max-w-4xl">
+        以「安心」為核心<br />重新定義房地產代銷
+      </h1>
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        鈺泰發行銷源自對「住得安心」的堅持。我們相信每一個家的選擇都值得被慎重對待，從建商口碑、物件品質到合約細節，皆以買家立場為優先考量。
+      </p>
+    </div>
+  </section>
+
+  <!-- Hero 圖 -->
+  <section class="pb-16 lg:pb-24">
+    <div class="container-custom">
+      <div class="aspect-[21/9] overflow-hidden">
+        <img
+          src={ABOUT_HERO}
+          alt="專業諮詢場景"
+          class="w-full h-full object-cover"
+          loading="eager"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- 三方共贏理念 -->
+  <section class="py-16 lg:py-24 bg-[var(--color-cream-50)]">
+    <div class="container-custom">
+      <div class="max-w-2xl mb-16">
+        <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+          OUR PHILOSOPHY
+        </p>
+        <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+          三方共贏的核心理念
+        </h2>
+        <p class="text-base text-[var(--color-ink-500)] leading-relaxed">
+          房地產交易是一場長期的合作關係，唯有買家、屋主、建商三方都安心，才是好的成交。
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        {[
+          { num: '01', title: '鈺泰用心', desc: '從物件盤點到客戶服務，每一個環節皆以專業與細心對待。我們重視「品質」遠勝「速度」。' },
+          { num: '02', title: '購屋安心', desc: '透明資訊、合理估價、誠實揭露，讓每位買家都能基於完整資訊做決定，不被資訊不對稱影響權益。' },
+          { num: '03', title: '建商放心', desc: '專業代銷團隊維護建商品牌口碑，協助建商精準觸達合適買家，避免低品質媒合造成的信任損失。' },
+        ].map((item) => (
+          <div>
+            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+              {item.num}
+            </p>
+            <h3 class="text-2xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+              {item.title}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+              {item.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 在地深耕 -->
+  <section class="py-16 lg:py-24">
+    <div class="container-custom">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="aspect-[4/5] overflow-hidden">
+          <img
+            src={ABOUT_OFFICE}
+            alt="專業諮詢服務"
+            class="w-full h-full object-cover"
+            loading="lazy"
+          />
+        </div>
+
+        <div>
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+            ROOTED IN YILAN
+          </p>
+          <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)] mb-8">
+            紮根宜蘭，<br />理解這片土地
+          </h2>
+
+          <div class="space-y-5 text-base text-[var(--color-ink-500)] leading-relaxed">
+            <p>
+              鈺泰發行銷由具備房地產實務經驗的團隊成立，深耕宜蘭在地市場。我們深信，地段不只是經緯度——每一條巷弄的氣味、每一個社區的鄰里結構、每一片山景的季節變化，都會影響買家未來十年的居住體驗。
+            </p>
+            <p>
+              我們的差異化在於「細節品質」：每一個物件皆經過實地勘查、合理估價與透明揭露；每一份合約皆逐條解讀；每一次交付皆協助驗收。這不是理所當然，而是我們選擇做的事。
+            </p>
+            <p class="text-[var(--color-ink-900)] font-medium pt-4">
+              我們不只是仲介，更是您購屋路上的專業夥伴。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-24 bg-[var(--color-cream-50)] border-t border-[var(--color-gold-200)]/30">
+    <div class="container-custom max-w-3xl text-center">
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        想了解我們的服務細節？
+      </h2>
+      <div class="flex flex-wrap gap-4 justify-center">
+        <a
+          href="/services"
+          class="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--color-gold-400)] hover:bg-[var(--color-gold-500)] text-white text-sm tracking-wider rounded-full transition-colors"
+        >
+          專業服務介紹
+        </a>
+        <a
+          href="/contact"
+          class="inline-flex items-center gap-2 px-7 py-3.5 border border-[var(--color-gold-300)] text-[var(--color-ink-700)] hover:bg-white text-sm tracking-wider rounded-full transition-colors"
+        >
+          聯絡我們
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

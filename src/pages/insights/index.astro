@@ -1,0 +1,47 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import ArticleCard from '~/components/ArticleCard.astro';
+import { getInsightsList } from '~/lib/content';
+
+const insights = await getInsightsList();
+---
+
+<BaseLayout
+  title="買房指南"
+  description="鈺泰發行銷整理的購屋知識與市場觀察，協助您做出更明智的房地產決策。"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '買房指南', href: '/insights' },
+  ]}
+>
+  <section class="pt-32 pb-12">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+        INSIGHTS
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8">
+        買房指南
+      </h1>
+      <p class="text-base text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        從第一次買房到投資置產，我們整理實戰經驗與專業觀察，助您看懂房市、避開地雷。
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-24 lg:pb-32">
+    <div class="container-custom">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+        {insights.map((item) => (
+          <ArticleCard
+            href={`/insights/${item.slug}`}
+            title={item.title}
+            excerpt={item.excerpt}
+            date={item.publishedAt}
+            category={item.category}
+            coverImage={item.coverImage}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

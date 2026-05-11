@@ -1,0 +1,173 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+
+const SERVICE_PROCESS = [
+  { step: '01', title: '初步諮詢', desc: '了解您的需求、預算、地段偏好。我們會先聽您說，再開始尋找物件。' },
+  { step: '02', title: '物件媒合', desc: '依需求精選新成屋 / 中古屋，提供完整資訊（屋齡、坪數、實價登錄、社區管理）。' },
+  { step: '03', title: '實地賞屋', desc: '陪同看屋，深度解說建材、格局、社區生態，並提醒您容易被忽略的細節。' },
+  { step: '04', title: '價格談判', desc: '基於市場行情與物件條件，專業協助議價，爭取最有利的成交條件。' },
+  { step: '05', title: '合約審閱', desc: '逐條解讀合約細節（特別是定金、違約、稅費條款），確保您的權益完整保障。' },
+  { step: '06', title: '交屋驗收', desc: '陪同驗收、協助點交，確認瑕疵改善，直到您拿到鑰匙的那一刻。' },
+];
+
+const SERVICES = [
+  {
+    id: 'new',
+    num: '01',
+    title: '新成屋代銷',
+    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80&auto=format&fit=crop',
+    desc: '與在地優質建商深度合作，協助您找到品質、價格、地段三方平衡的新建案。',
+    points: [
+      '建商背景查核（過往作品、財務狀況、後續服務口碑）',
+      '建材與規格逐項檢視（不只看樣品屋，看真實施工）',
+      '合約特殊條款重點提醒（履約保證、保固範圍、變更條款）',
+      '貸款規劃協助（與多家銀行配合，爭取較佳條件）',
+    ],
+  },
+  {
+    id: 'used',
+    num: '02',
+    title: '中古屋買賣',
+    image: 'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop',
+    desc: '無論您是想出售或購買中古屋，我們提供完整的盤點、估價、媒合與成交服務。',
+    points: [
+      '物件深度盤點（屋齡、漏水、結構、管線、外牆、頂樓）',
+      '合理估價（基於實價登錄 + 區域行情 + 物件條件綜合判斷）',
+      '誠信媒合（不誇大、不隱瞞、不偽裝）',
+      '產權與抵押查核（避免買到有糾紛的物件）',
+    ],
+  },
+  {
+    id: 'consult',
+    num: '03',
+    title: '購屋諮詢',
+    image: 'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1200&q=80&auto=format&fit=crop',
+    desc: '從第一次買房的心理建設到合約最後一條的細節說明，提供一站式專業諮詢。',
+    points: [
+      '資金規劃（頭期款、貸款比例、月付金、生活備用金）',
+      '地段選擇（生活半徑、學區、交通、未來發展）',
+      '合約審閱（履約保證、違約條款、稅費分擔）',
+      '驗屋陪同（瑕疵清單、改善追蹤、點交確認）',
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="專業服務"
+  description="鈺泰發行銷提供新成屋代銷、中古屋買賣、購屋諮詢三大服務，附完整六階段服務流程。"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '專業服務', href: '/services' },
+  ]}
+>
+  <section class="pt-32 pb-16">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+        SERVICES
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8 max-w-4xl">
+        從第一次接洽<br />到入住的全程陪伴
+      </h1>
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        我們不只是仲介，更是您購屋路上的專業夥伴。從需求釐清、物件媒合、合約審閱到交屋驗收，提供完整六階段服務。
+      </p>
+    </div>
+  </section>
+
+  <!-- 三大服務 -->
+  {SERVICES.map((service, i) => (
+    <section
+      id={service.id}
+      class={`py-16 lg:py-24 ${i % 2 === 1 ? 'bg-[var(--color-cream-50)]' : ''}`}
+    >
+      <div class="container-custom">
+        <div class={`grid grid-cols-1 lg:grid-cols-2 gap-16 items-center ${i % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
+          <div class={i % 2 === 1 ? 'lg:col-start-2' : ''}>
+            <div class="aspect-[4/3] overflow-hidden">
+              <img
+                src={service.image}
+                alt={service.title}
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          <div>
+            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+              {service.num}
+            </p>
+            <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+              {service.title}
+            </h2>
+            <p class="text-base text-[var(--color-ink-500)] leading-relaxed mb-8">
+              {service.desc}
+            </p>
+
+            <ul class="space-y-3">
+              {service.points.map((point) => (
+                <li class="flex items-start gap-3 text-sm text-[var(--color-ink-700)] leading-relaxed">
+                  <span class="text-[var(--color-gold-500)] mt-0.5">·</span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <!-- 服務流程 -->
+  <section class="py-16 lg:py-24 bg-[var(--color-cream-100)]">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        OUR PROCESS
+      </p>
+      <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)] mb-16">
+        六階段服務流程
+      </h2>
+
+      <div class="relative">
+        <div class="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-[var(--color-gold-300)]/40 -translate-x-1/2"></div>
+
+        <div class="space-y-12">
+          {SERVICE_PROCESS.map((item, i) => (
+            <div class={`relative flex gap-8 md:gap-16 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+              <div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[var(--color-gold-400)] ring-4 ring-[var(--color-cream-100)]"></div>
+
+              <div class={`pl-12 md:pl-0 md:w-1/2 ${i % 2 === 0 ? 'md:pr-16 md:text-right' : 'md:pl-16'}`}>
+                <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-3">
+                  STEP {item.step}
+                </p>
+                <h3 class="text-2xl font-light text-[var(--color-ink-900)] mb-3 tracking-wider">
+                  {item.title}
+                </h3>
+                <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+              <div class="hidden md:block md:w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-24 bg-[var(--color-cream-50)] border-t border-[var(--color-gold-200)]/30">
+    <div class="container-custom max-w-3xl text-center">
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        想開始您的購屋諮詢？
+      </h2>
+      <a
+        href="/contact"
+        class="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--color-gold-400)] hover:bg-[var(--color-gold-500)] text-white text-sm tracking-wider rounded-full transition-colors"
+      >
+        填寫諮詢表單
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

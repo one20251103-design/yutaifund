@@ -1,0 +1,150 @@
+---
+import { SITE } from '~/lib/site';
+
+interface BreadcrumbItem {
+  name: string;
+  href: string;
+}
+
+interface Props {
+  type?: 'organization' | 'webPage' | 'article' | 'realEstateListing';
+  breadcrumbs?: BreadcrumbItem[];
+  article?: {
+    title: string;
+    description: string;
+    datePublished: string;
+    image: string;
+  };
+  listing?: {
+    name: string;
+    description: string;
+    image: string;
+    location?: string;
+    propertyType?: string;
+  };
+}
+
+const { type = 'webPage', breadcrumbs, article, listing } = Astro.props;
+const baseUrl = SITE.url;
+const currentUrl = new URL(Astro.url.pathname, Astro.site).toString();
+
+const realEstateAgent = {
+  '@context': 'https://schema.org',
+  '@type': 'RealEstateAgent',
+  name: SITE.fullName,
+  alternateName: SITE.englishName,
+  url: baseUrl,
+  telephone: SITE.phone,
+  email: SITE.email,
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'TW',
+    addressRegion: '宜蘭縣',
+  },
+  description: SITE.description,
+  slogan: SITE.slogan,
+  areaServed: [
+    { '@type': 'City', name: '宜蘭市' },
+    { '@type': 'Place', name: '礁溪鄉' },
+    { '@type': 'Place', name: '羅東鎮' },
+    { '@type': 'Place', name: '五結鄉' },
+  ],
+  knowsAbout: ['新成屋代銷', '中古屋買賣', '購屋諮詢', '房地產投資', '宜蘭房市'],
+};
+
+const webSite = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.name,
+  alternateName: SITE.englishName,
+  url: baseUrl,
+  inLanguage: 'zh-Hant-TW',
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.fullName,
+  },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${baseUrl}/portfolio?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const breadcrumbList = breadcrumbs && breadcrumbs.length > 0
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: breadcrumbs.map((item, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: item.name,
+        item: new URL(item.href, baseUrl).toString(),
+      })),
+    }
+  : null;
+
+const articleSchema = article
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: article.title,
+      description: article.description,
+      datePublished: article.datePublished,
+      image: article.image,
+      author: { '@type': 'Organization', name: SITE.fullName },
+      publisher: { '@type': 'Organization', name: SITE.fullName },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': currentUrl },
+    }
+  : null;
+
+const realEstateListing = listing
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'RealEstateListing',
+      name: listing.name,
+      description: listing.description,
+      image: listing.image,
+      url: currentUrl,
+      offers: {
+        '@type': 'Offer',
+        availability: 'https://schema.org/InStock',
+        seller: { '@type': 'RealEstateAgent', name: SITE.fullName },
+      },
+      ...(listing.location && {
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'TW',
+          addressRegion: '宜蘭縣',
+          addressLocality: listing.location,
+        },
+      }),
+    }
+  : null;
+---
+
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(realEstateAgent)}
+/>
+<script type="application/ld+json" set:html={JSON.stringify(webSite)} />
+
+{breadcrumbList && (
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(breadcrumbList)}
+  />
+)}
+
+{articleSchema && (
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(articleSchema)}
+  />
+)}
+
+{realEstateListing && (
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(realEstateListing)}
+  />
+)}

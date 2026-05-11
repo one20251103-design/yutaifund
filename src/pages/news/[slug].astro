@@ -1,0 +1,134 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import LineShareButton from '~/components/LineShareButton.tsx';
+import RichBody from '~/components/RichBody.astro';
+import { getNewsList, getNewsBySlug } from '~/lib/content';
+import { SITE } from '~/lib/site';
+
+export async function getStaticPaths() {
+  const news = await getNewsList();
+  return news.map((item) => ({ params: { slug: item.slug } }));
+}
+
+const { slug } = Astro.params;
+const item = await getNewsBySlug(slug!);
+if (!item) return Astro.redirect('/news');
+const shareUrl = new URL(`/news/${item.slug}`, SITE.url).toString();
+
+const formatDate = (iso: string) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+};
+---
+
+<BaseLayout
+  title={item.title}
+  description={item.excerpt}
+  ogImage={item.coverImage}
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '最新消息', href: '/news' },
+    { name: item.title, href: `/news/${item.slug}` },
+  ]}
+  article={{
+    title: item.title,
+    description: item.excerpt,
+    datePublished: item.publishedAt,
+    image: item.coverImage,
+  }}
+>
+
+  <section class="pt-32 pb-12">
+    <div class="container-custom max-w-3xl">
+      <p class="text-xs tracking-widest text-[var(--color-ink-500)] mb-4">
+        <time datetime={item.publishedAt}>{formatDate(item.publishedAt)}</time>
+      </p>
+
+      <h1 class="text-3xl md:text-5xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8">
+        {item.title}
+      </h1>
+
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] leading-relaxed">
+        {item.excerpt}
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container-custom max-w-3xl">
+      <div class="aspect-[16/9] overflow-hidden mb-12">
+        <img
+          src={item.coverImage}
+          alt={item.title}
+          class="w-full h-full object-cover"
+        />
+      </div>
+    </div>
+  </section>
+
+  <article class="pb-24 lg:pb-32">
+    <div class="container-custom max-w-3xl">
+      <RichBody body={item.body} />
+
+      <div class="mt-16 pt-8 border-t border-[var(--color-gold-200)]/40 flex flex-wrap items-center gap-4">
+        <p class="text-sm text-[var(--color-ink-500)] tracking-wider">分享：</p>
+        <LineShareButton client:idle title={item.title} url={shareUrl} />
+      </div>
+
+      <div class="mt-12">
+        <a
+          href="/news"
+          class="inline-flex items-center gap-2 text-sm tracking-wider text-[var(--color-ink-500)] hover:text-[var(--color-gold-500)] transition-colors"
+        >
+          <span aria-hidden="true">←</span>
+          回到最新消息
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style is:global>
+  .prose-yutai {
+    color: var(--color-ink-700);
+    font-size: 1rem;
+    line-height: 1.85;
+  }
+  .prose-yutai p { margin-bottom: 1.5em; }
+  .prose-yutai h2 {
+    font-size: 1.6rem;
+    font-weight: 400;
+    margin-top: 2.5em;
+    margin-bottom: 1em;
+    color: var(--color-ink-900);
+    letter-spacing: 0.02em;
+  }
+  .prose-yutai ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5em;
+  }
+  .prose-yutai li {
+    padding-left: 1.5em;
+    position: relative;
+    margin-bottom: 0.5em;
+  }
+  .prose-yutai li::before {
+    content: '·';
+    color: var(--color-gold-500);
+    position: absolute;
+    left: 0.5em;
+    font-size: 1.5em;
+    line-height: 1;
+  }
+  .prose-yutai hr {
+    border: none;
+    height: 1px;
+    background: var(--color-gold-200);
+    margin: 3em 0;
+  }
+  .prose-yutai strong {
+    color: var(--color-ink-900);
+    font-weight: 500;
+  }
+</style>

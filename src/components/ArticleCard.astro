@@ -1,0 +1,54 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  category?: string;
+  coverImage: string;
+  reveal?: string;
+}
+
+const { href, title, excerpt, date, category, coverImage, reveal = '閱讀全文' } = Astro.props;
+
+const formatDate = (iso: string) => {
+  const d = new Date(iso);
+  return `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+};
+---
+
+<a
+  href={href}
+  class="group block reveal"
+  data-cursor-reveal={reveal}
+>
+  <div class="relative aspect-[16/10] overflow-hidden bg-[var(--color-mist-100)] mb-6">
+    <img
+      src={coverImage}
+      alt={title}
+      class="image-zoom-slow w-full h-full object-cover"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 border-hairline border-[var(--color-mist-200)] pointer-events-none"></div>
+  </div>
+
+  <div>
+    <div class="flex items-center gap-3 text-xs tracking-[0.25em] text-[var(--color-ink-500)] mb-3 uppercase font-display">
+      <time datetime={date}>{formatDate(date)}</time>
+      {category && (
+        <>
+          <span class="text-[var(--color-mist-300)]">·</span>
+          <span class="text-[var(--color-gold-500)]">{category}</span>
+        </>
+      )}
+    </div>
+
+    <h3 class="text-xl text-[var(--color-ink-900)] mb-3 leading-snug group-hover:text-[var(--color-navy-700)] transition-colors duration-700 line-clamp-2">
+      {title}
+    </h3>
+
+    <p class="text-sm text-[var(--color-ink-500)] leading-relaxed line-clamp-2 font-sans-tc">
+      {excerpt}
+    </p>
+  </div>
+</a>

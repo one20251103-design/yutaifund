@@ -1,0 +1,131 @@
+---
+import { urlFor } from '~/lib/sanity';
+
+interface Props {
+  body: string | any[];
+  className?: string;
+}
+
+const { body, className = 'prose-yutai' } = Astro.props;
+
+// ── 簡易 markdown → html（本機 fallback 用） ─────────────────
+const renderMarkdown = (md: string) => {
+  return md
+    .split('\n\n')
+    .map((block) => {
+      const trimmed = block.trim();
+      if (!trimmed) return '';
+      if (trimmed.startsWith('## ')) return `<h2>${trimmed.slice(3)}</h2>`;
+      if (trimmed.startsWith('# ')) return `<h1>${trimmed.slice(2)}</h1>`;
+      if (trimmed.startsWith('- ')) {
+        const items = trimmed
+          .split('\n')
+          .map((l) => `<li>${l.replace(/^- /, '').trim()}</li>`)
+          .join('');
+        return `<ul>${items}</ul>`;
+      }
+      if (trimmed === '---') return '<hr>';
+      const html = trimmed
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\n/g, '<br>');
+      return `<p>${html}</p>`;
+    })
+    .join('\n');
+};
+
+// ── 極簡 Portable Text 渲染（Sanity 用）────────────────────
+// 只處理常見 block types：normal / h1-h3 / blockquote / list / image
+// 處理常見 marks：strong / em / link
+const escapeHtml = (s: string) =>
+  s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+const renderSpan = (span: any, markDefs: any[] = []): string => {
+  if (!span?.text) return '';
+  let text = escapeHtml(span.text);
+  const marks: string[] = span.marks || [];
+  // 包 mark（順序：link → strong → em，由外而內）
+  for (const mark of marks) {
+    if (mark === 'strong') text = `<strong>${text}</strong>`;
+    else if (mark === 'em') text = `<em>${text}</em>`;
+    else if (mark === 'underline') text = `<u>${text}</u>`;
+    else {
+      const def = markDefs.find((d: any) => d._key === mark);
+      if (def?._type === 'link' && def.href) {
+        text = `<a href="${escapeHtml(def.href)}" target="_blank" rel="noopener">${text}</a>`;
+      }
+    }
+  }
+  return text;
+};
+
+const renderBlock = (block: any): string => {
+  if (block._type === 'image') {
+    const url = block.asset ? urlFor(block).width(1200).url() : null;
+    const alt = block.alt || '';
+    return url
+      ? `<figure class="my-8"><img src="${escapeHtml(url)}" alt="${escapeHtml(alt)}" class="w-full" loading="lazy" />${alt ? `<figcaption>${escapeHtml(alt)}</figcaption>` : ''}</figure>`
+      : '';
+  }
+
+  if (block._type !== 'block') return '';
+
+  const children = (block.children || [])
+    .map((c: any) => renderSpan(c, block.markDefs || []))
+    .join('');
+
+  const style = block.style || 'normal';
+  const listItem = block.listItem;
+
+  if (listItem === 'bullet') return `<li>${children}</li>`;
+  if (listItem === 'number') return `<li>${children}</li>`;
+
+  switch (style) {
+    case 'h1': return `<h1>${children}</h1>`;
+    case 'h2': return `<h2>${children}</h2>`;
+    case 'h3': return `<h3>${children}</h3>`;
+    case 'h4': return `<h4>${children}</h4>`;
+    case 'blockquote': return `<blockquote>${children}</blockquote>`;
+    default: return `<p>${children}</p>`;
+  }
+};
+
+const renderPortableText = (blocks: any[]): string => {
+  // 把連續的 listItem block 包成 <ul> / <ol>
+  const out: string[] = [];
+  let listType: 'bullet' | 'number' | null = null;
+  const flushList = () => {
+    if (!listType) return;
+    out.push(listType === 'bullet' ? '</ul>' : '</ol>');
+    listType = null;
+  };
+
+  for (const block of blocks || []) {
+    const isList = block?._type === 'block' && (block.listItem === 'bullet' || block.listItem === 'number');
+    if (isList) {
+      const newType = block.listItem;
+      if (listType !== newType) {
+        flushList();
+        out.push(newType === 'bullet' ? '<ul>' : '<ol>');
+        listType = newType;
+      }
+      out.push(renderBlock(block));
+    } else {
+      flushList();
+      out.push(renderBlock(block));
+    }
+  }
+  flushList();
+  return out.join('\n');
+};
+
+const isString = typeof body === 'string';
+const html = isString
+  ? renderMarkdown(body as string)
+  : renderPortableText(body as any[]);
+---
+
+<div class={className} set:html={html} />
