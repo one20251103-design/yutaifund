@@ -9,8 +9,8 @@ export const SITE = {
   phone: '03-9558400',
   email: 'info@yutaifund.tw',
   address: '宜蘭縣',
-  // 一方圓 OA 測試用短網址；客戶交付前換成鈺泰發 OA 的 lin.ee
-  lineAddFriendUrl: 'https://lin.ee/rpAl9J4',
+  // 鈺泰發測試用 OA（一方圓 Gmail 管理；交付時 transfer 給鈺泰發或重新發行 Token）
+  lineAddFriendUrl: 'https://lin.ee/yNHl4Wq',
   facebook: 'https://www.facebook.com/yutaifund',
 } as const;
 

@@ -2,7 +2,7 @@
 
 > **用途**：在 LINE OA Manager（manager.line.biz）填這些內容
 > **品牌調性**：專業、溫度、可靠，不裝熟、不過度業務感
-> **適用對象**：暫時用一方圓 OA 做 demo 測試，定案後搬遷到鈺泰發 OA
+> **適用對象**：鈺泰發測試 OA（一方圓 Gmail 管理）。Channel ID `2010045833`、lin.ee `yNHl4Wq`。交付時 transfer 給鈺泰發 Gmail（保留設定）+ Reissue Channel Access Token。
 
 ---
 
@@ -278,33 +278,22 @@
 
 ## 3. 圖文選單（Rich Menu）6 格設計
 
-> **尺寸**：2500 × 843（標準大型，3 × 2 格）
-> **每格尺寸**：833 × 421（自動切割）
-> **預覽 HTML**：見 `docs/rich-menu-mock.html`
+> **尺寸**：2500 × 1686（大型 6 格，每格 833 × 843）
+> **PNG 檔**：`docs/rich-menu.png`（112 KB，已產出）
+> **HTML 原檔**：`docs/rich-menu-export.html` + `docs/rich-menu-mock.html`
 
 ### 6 格 Action 設定
 
 | 格 | 標題 | Action 類型 | URL / 內容 |
 |----|------|------------|-----------|
-| 1 (左上) | 💬 線上諮詢 | Link | `https://yutaifund.tw/contact` |
-| 2 (中上) | 🏘 案例瀏覽 | Link | `https://yutaifund.tw/portfolio` |
-| 3 (右上) | 📋 專業服務 | Link | `https://yutaifund.tw/services` |
-| 4 (左下) | 📖 買房指南 | Link | `https://yutaifund.tw/insights` |
-| 5 (中下) | 📰 最新消息 | Link | `https://yutaifund.tw/news` |
-| 6 (右下) | 📞 聯絡資訊 | Text | （見下方文字內容） |
+| A (左上) | 鈺泰發 logo | Link | `https://yutaifund.tw/` （上線前用 `yutaifund.pages.dev`） |
+| B (中上) | 案例瀏覽 | Link | `https://yutaifund.tw/portfolio` |
+| C (右上) | 專業服務 | Link | `https://yutaifund.tw/services` |
+| D (左下) | 買房指南 | Link | `https://yutaifund.tw/insights` |
+| E (中下) | 最新消息 | Link | `https://yutaifund.tw/news` |
+| F (右下) | 線上諮詢 | Text | `我想預約看房` |
 
-第 6 格觸發的文字訊息：
-
-```
-📞 鈺泰發行銷 聯絡資訊
-
-服務專線 03-9558400
-營業時間 週一至六 09:00 - 18:00
-辦公地址 宜蘭縣（預約優先）
-
-🌐 官網 https://yutaifund.tw
-✉️ Email info@yutaifund.tw
-```
+> F 格設成「文字」action 意思是按下後客戶端會自動傳「我想預約看房」給 OA，觸發下方第 4 條關鍵字自動回應規則（諮詢預約）。
 
 ### Rich Menu 設定步驟
 
@@ -312,10 +301,10 @@
 2. 標題（內部用）：「鈺泰發主選單 v1」
 3. 使用期間：勾「無使用期限」
 4. 顯示設定：勾「**預設顯示為展開**」
-5. 模板：選「大型 6 格」
-6. **設計**：點「上傳圖片」→ 上傳你截圖好的 PNG（2500×843）
+5. 模板：選「**大型 6 格（2×3）**」← 注意不是「緊湊」也不是其他切法
+6. **設計**：點「上傳圖片」→ 上傳 `docs/rich-menu.png`
 7. **動作**：點每一格 → 依上表設定 Action 類型 + URL/文字
-8. 點 **儲存** → 設為「**設定使用**」
+8. 點 **儲存** → 設為「**設定使用中**」
 
 ---
 

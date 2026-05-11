@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>Export - 鈺泰發 Rich Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 2500px;
+    height: 1686px;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 鈺泰發品牌色（從 site.ts 的金色 + 黑色衍生） */
+  :root {
+    --brand: #1A1A1A;            /* 深墨主色 */
+    --brand-soft: #3D3329;       /* 暖深棕（icon、副元素） */
+    --brand-mute: #A89677;       /* 副標 / 分隔線 */
+    --gold: #B89855;             /* 強調金 */
+    --gold-light: #D8C68F;       /* CTA 標籤金 */
+    --bg: #F4EFE7;               /* 暖米白底 */
+    --bg-cta: #ECE0C7;           /* F 格 CTA 底色 */
+    --divider: rgba(184, 152, 85, 0.18);
+  }
+
+  .rich-menu {
+    width: 2500px;
+    height: 1686px;
+    display: grid;
+    grid-template-columns: 833.33px 833.33px 833.33px;
+    grid-template-rows: 843px 843px;
+    position: relative;
+    background: var(--bg);
+    overflow: hidden;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+
+  .cell-divider-v1, .cell-divider-v2 {
+    position: absolute;
+    top: 140px;
+    bottom: 140px;
+    width: 1px;
+    background: var(--divider);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .cell-divider-v1 { left: 33.33%; }
+  .cell-divider-v2 { left: 66.66%; }
+  .cell-divider-h {
+    position: absolute;
+    left: 140px;
+    right: 140px;
+    top: 50%;
+    height: 1px;
+    background: var(--divider);
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 60px;
+    position: relative;
+    text-align: center;
+    width: 833.33px;
+    height: 843px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .cell.cta {
+    background: var(--bg-cta);
+  }
+
+  .icon-zone {
+    width: 240px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+    flex-shrink: 0;
+  }
+  .icon-zone svg {
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--brand-soft);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .icon-zone svg .fill {
+    fill: var(--brand-soft);
+    stroke: none;
+  }
+
+  .title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 64px;
+    font-weight: 500;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    color: var(--brand);
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+
+  .subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0.5em;
+    text-indent: 0.5em;
+    margin-top: 24px;
+    color: var(--brand-mute);
+    font-style: italic;
+  }
+
+  /* A 格：鈺泰發品牌標題（無圖檔 logo，純文字 + 金線分隔） */
+  .logo-cell {
+    padding: 80px;
+  }
+  .brand-mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+  }
+  .brand-name {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 110px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-indent: 0.18em;
+    color: var(--brand);
+    line-height: 1;
+  }
+  .brand-divider {
+    width: 80px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .brand-tagline {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 30px;
+    font-weight: 300;
+    letter-spacing: 0.6em;
+    text-indent: 0.6em;
+    color: var(--brand-soft);
+  }
+  .brand-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.4em;
+    text-indent: 0.4em;
+    color: var(--brand-mute);
+    margin-top: 16px;
+  }
+
+  .external-mark {
+    position: absolute;
+    top: 60px;
+    right: 70px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+  }
+  .external-mark::after {
+    content: ' →';
+    margin-left: 4px;
+  }
+  .cta-mark {
+    position: absolute;
+    top: 60px;
+    right: 70px;
+    padding: 8px 22px;
+    border: 1px solid var(--gold);
+    border-radius: 100px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+  }
+</style>
+</head>
+<body>
+
+<div class="rich-menu">
+
+  <div class="cell-divider-v1"></div>
+  <div class="cell-divider-v2"></div>
+  <div class="cell-divider-h"></div>
+
+  <!-- A 鈺泰發行銷 → 連結 yutaifund.tw -->
+  <div class="cell logo-cell" style="grid-column: 1; grid-row: 1;">
+    <span class="external-mark">官網</span>
+    <div class="brand-mark">
+      <div class="brand-name">鈺泰發</div>
+      <div class="brand-divider"></div>
+      <div>
+        <div class="brand-tagline">行銷有限公司</div>
+        <div class="brand-en">YU TAI FUND</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B 案例瀏覽 -->
+  <div class="cell" style="grid-column: 2; grid-row: 1;">
+    <div class="icon-zone">
+      <svg viewBox="0 0 200 200">
+        <!-- 雙棟房屋 -->
+        <path d="M 30 100 L 75 55 L 120 100 L 120 165 L 30 165 Z"/>
+        <path d="M 100 120 L 140 85 L 180 120 L 180 165 L 100 165 Z"/>
+        <!-- 窗戶 -->
+        <rect x="55" y="115" width="20" height="22"/>
+        <line x1="142" y1="135" x2="158" y2="135"/>
+        <line x1="142" y1="150" x2="158" y2="150"/>
+      </svg>
+    </div>
+    <div class="title">案例瀏覽</div>
+    <div class="subtitle">Portfolio</div>
+  </div>
+
+  <!-- C 專業服務 -->
+  <div class="cell" style="grid-column: 3; grid-row: 1;">
+    <div class="icon-zone">
+      <svg viewBox="0 0 200 200">
+        <!-- 公事包 -->
+        <rect x="30" y="65" width="140" height="100" rx="4"/>
+        <!-- 提把 -->
+        <path d="M 75 65 L 75 50 Q 75 40 85 40 L 115 40 Q 125 40 125 50 L 125 65"/>
+        <!-- 中間扣環 -->
+        <line x1="90" y1="115" x2="110" y2="115" stroke-width="6"/>
+      </svg>
+    </div>
+    <div class="title">專業服務</div>
+    <div class="subtitle">Services</div>
+  </div>
+
+  <!-- D 買房指南 -->
+  <div class="cell" style="grid-column: 1; grid-row: 2;">
+    <div class="icon-zone">
+      <svg viewBox="0 0 200 200">
+        <!-- 開啟的書 -->
+        <path d="M 30 50 Q 30 45 35 45 L 95 45 Q 100 45 100 55 L 100 165 Q 100 160 95 160 L 35 160 Q 30 160 30 155 Z"/>
+        <path d="M 100 55 Q 100 45 105 45 L 165 45 Q 170 45 170 50 L 170 155 Q 170 160 165 160 L 105 160 Q 100 160 100 165 Z"/>
+        <!-- 內頁線 -->
+        <line x1="45" y1="75" x2="85" y2="75"/>
+        <line x1="45" y1="95" x2="85" y2="95"/>
+        <line x1="45" y1="115" x2="75" y2="115"/>
+        <line x1="115" y1="75" x2="155" y2="75"/>
+        <line x1="115" y1="95" x2="155" y2="95"/>
+        <line x1="115" y1="115" x2="145" y2="115"/>
+      </svg>
+    </div>
+    <div class="title">買房指南</div>
+    <div class="subtitle">Guides</div>
+  </div>
+
+  <!-- E 最新消息 -->
+  <div class="cell" style="grid-column: 2; grid-row: 2;">
+    <div class="icon-zone">
+      <svg viewBox="0 0 200 200">
+        <!-- 報紙 -->
+        <rect x="35" y="40" width="120" height="135" rx="2"/>
+        <!-- 主標欄 -->
+        <rect x="50" y="55" width="90" height="30" rx="1" class="fill" fill-opacity="0.15"/>
+        <rect x="50" y="55" width="90" height="30" rx="1"/>
+        <!-- 內文 -->
+        <line x1="50" y1="105" x2="140" y2="105"/>
+        <line x1="50" y1="120" x2="140" y2="120"/>
+        <line x1="50" y1="135" x2="115" y2="135"/>
+        <line x1="50" y1="150" x2="140" y2="150"/>
+      </svg>
+    </div>
+    <div class="title">最新消息</div>
+    <div class="subtitle">News</div>
+  </div>
+
+  <!-- F 線上諮詢 (CTA) -->
+  <div class="cell cta" style="grid-column: 3; grid-row: 2;">
+    <span class="cta-mark">Book</span>
+    <div class="icon-zone">
+      <svg viewBox="0 0 200 200">
+        <!-- 對話框 -->
+        <path d="M 35 50 L 165 50 Q 175 50 175 60 L 175 130 Q 175 140 165 140 L 90 140 L 65 165 L 65 140 L 45 140 Q 35 140 35 130 L 35 60 Q 35 50 45 50 Z"/>
+        <!-- 三個圓點（傳訊中） -->
+        <circle cx="80" cy="95" r="6" class="fill"/>
+        <circle cx="105" cy="95" r="6" class="fill"/>
+        <circle cx="130" cy="95" r="6" class="fill"/>
+      </svg>
+    </div>
+    <div class="title">線上諮詢</div>
+    <div class="subtitle">Contact</div>
+  </div>
+
+</div>
+
+</body>
+</html>
