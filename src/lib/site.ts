@@ -6,9 +6,9 @@ export const SITE = {
   description:
     '宜蘭專業房地產代銷與顧問。新成屋、中古屋一站式服務，讓您買得安心、住得放心。',
   url: 'https://yutaifund.tw',
-  phone: '03-9558400',
+  phone: '03-9577000',
   email: 'info@yutaifund.tw',
-  address: '宜蘭縣',
+  address: '268 宜蘭縣五結鄉協和村自強東路 71 號',
   // 鈺泰發測試用 OA（一方圓 Gmail 管理；交付時 transfer 給鈺泰發或重新發行 Token）
   lineAddFriendUrl: 'https://lin.ee/yNHl4Wq',
   facebook: 'https://www.facebook.com/yutaifund',

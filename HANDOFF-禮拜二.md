@@ -40,39 +40,43 @@
 
 ---
 
+## ✅ 2026-05-12 早上 Claude 預先處理掉的事
+
+| 項目 | 結果 |
+|------|------|
+| 部署活著驗證 | `curl https://yutaifund.pages.dev` → 200 OK |
+| Git 同步狀態 | working tree clean，最新 commit `db980e7` 已推上 origin/main，HANDOFF 提到的未推改動其實已經推完 |
+| Text Parser regex 升級 | 從抓 4 欄位 → 抓 6 欄位（加入 inquiry_type / location），改用 optional named group 容錯客戶未選的情況 |
+| Flex JSON 升級 | 卡片多兩行「類型 / 地點」，業務一眼看出客戶想看什麼 |
+| 鈺泰發電話 / 地址全專案校正 | Hank 確認後（2026-05-12）：電話 `03-9558400` → `03-9577000`、地址 `'宜蘭縣'` → `'268 宜蘭縣五結鄉協和村自強東路 71 號'`。涉及檔案：`site.ts`、`StructuredData.astro`（Schema 補 postalCode / addressLocality / streetAddress）、`contact.astro`（Google Maps iframe 重新定位到實際地址 zoom 16）、`line-oa-content.md`（8 處電話 + 2 處地址）。原 `03-9558400` 是當初 copy 一方圓設計電話的 placeholder |
+| 🔴 **表單 Big5 編碼 bug 修正** | Hank 從一方圓 Gmail 抓真實 Formspree 信件貼回（2026-05-12），發現中文 value 被編成 Big5 URL-encoded（`%A4%FD%A4p%A9%FA` = Big5 王小明，不是 UTF-8 `%E7%8E%8B...`）。**結果**：即使 Make.com regex 抓對，下游 LINE 收到也是亂碼 `%A4%FD%A4p%A9%FA`。**修法**：`contact.astro` 表單加 `accept-charset="UTF-8"` + hidden `_charset_=utf-8` 雙保險強制 UTF-8 提交。**Hank 部署後務必再測一次表單**，到 Make.com History 看 Gmail 模組 output 應該變成正常中文 `王小明` |
+| Text Parser regex 加 stop anchor | 看到實際信件後發現 Formspree 用 `label 自己一行 + value 下一行` 格式（不是 `name: value` 同一行），原 regex 剛好還能抓但 message 結尾會吃進 `Submitted 05:22 PM - 11 May 2026` 時間戳。加 `\n\s*Submitted\s` 為停止條件解決 |
+| Gmail Watch 過濾教學補上 | 原文件叫「Read all email」是錯的會暴噴 ops（Hank 已踩雷）。`make-scenario-setup.md` Step 2 已改為 Sender email 強制 `noreply@formspree.io` + Criteria `Only unread mails`，降低 downstream 浪費 |
+| Free plan polling 估算修正 | 原文件寫 15 分鐘是錯的（Hank 指正 2026-05-12）。Gmail Watch 每次 polling = 1 op，與是否抓到信無關。15 min × 30 天 = 2,880 ops 直接 3 倍爆 1,000 額度。Step 5 與 ops 估算表全面改成 **120 分鐘**（360 polls/月，留 640 ops 給流量，可消化每月 ~64 筆表單）。要再快只能升 Core $9/月或改 Formspree Plus webhook |
+
+---
+
 ## 🚧 還沒收尾的事（明天優先處理）
 
-### Step 0：先檢查 Formspree 寄出的 Email 格式 vs Text Parser regex（**最關鍵**）
+### Step 0：先重測表單確認 Big5 → UTF-8 真的修了（**最關鍵**）
 
-**為什麼**：今天測試發現 Make.com 流程**走到第 2 步（Text Parser）就斷了**，沒進到 LINE。最大嫌疑就是 **Formspree 寄出的信件內文格式跟 Text Parser regex 對不上**——Text Parser 沒抓到欄位 → output 是空 → 下游 LINE 模組沒值可推。
+**為什麼**：2026-05-12 Hank 把實際 Formspree 信件貼出來，發現 value 是 Big5 URL-encoded（`%A4%FD%A4p%A9%FA` = Big5 王小明）。已在 `contact.astro` 表單加 `accept-charset="UTF-8"` + `_charset_=utf-8` 強制 UTF-8。**但這是上游瀏覽器行為，需要實測驗證**。
 
-**Text Parser 目前的 regex（在 `docs/make-scenario-setup.md`）**：
+**最終 regex（在 `docs/make-scenario-setup.md`，已與實際信件格式校正）**：
 ```
-name:\s*(?<name>[^\n]+)[\s\S]*?phone:\s*(?<phone>[^\n]+)[\s\S]*?email:\s*(?<email>[^\n]+)[\s\S]*?message:\s*(?<message>[\s\S]+?)(?:\n--|$)
-```
-
-預期信件長這樣：
-```
-name: 王小明
-phone: 0912345678
-email: customer@gmail.com
-message: 我想看礁溪的物件
+name:\s*(?<name>[^\r\n]+)[\s\S]*?phone:\s*(?<phone>[^\r\n]+)(?:[\s\S]*?email:\s*(?<email>[^\r\n]*))?(?:[\s\S]*?inquiry_type:\s*(?<inquiry_type>[^\r\n]*))?(?:[\s\S]*?location:\s*(?<location>[^\r\n]*))?(?:[\s\S]*?message:\s*(?<message>[\s\S]*?))?(?:\n\s*Submitted\s|\n\s*--|\n\s*Sent from|$)
 ```
 
-**Formspree 的實際格式可能不一樣**——它可能首字大寫（`Name:`）、用「-」分隔欄位、加額外欄位（`inquiry_type:`）、甚至用 HTML email 模板。
+**Formspree 信件實際格式**（已確認）：label 自己一行、value 下一行、欄位間 2-3 行空白、客戶沒選的 select 欄位 Formspree 直接省略整行（不留空 label）。
 
-**明天先做**：
-1. Make.com → 你的 scenario → 上方 **History** tab
-2. 點開最近一筆有跑過 Text Parser 的紀錄
-3. **Gmail 模組的 output**：複製 `text.content` 欄位的內容貼給 Claude
-4. Claude 看實際信件格式 → 重寫 Text Parser regex
-
-**手動檢查捷徑**（不用等 Claude）：
-1. 開一方圓 Gmail → 找 Formspree 寄來的測試信
-2. 看內文長什麼樣（重點：欄位 label 是 `name:` 還是 `Name :` 還是 `姓名：`？順序對嗎？）
-3. 對照 regex 看 named groups（name/phone/email/message）能不能匹配
-
-**順手考慮**：表單 `inquiry_type` 欄位（諮詢類型）今天 regex 沒抓——明天 regex 可以加進來，讓 LINE 卡片多顯示一行「諮詢類型」。
+**明天先做**（Step 1 之前的前置驗證）：
+1. 確認 Cloudflare Pages 有重新 deploy（push 後 1-2 分鐘）
+2. 開 https://yutaifund.pages.dev/contact 用瀏覽器（建議 Chrome）填一筆 → 送出
+3. 開 Chrome DevTools → Network tab → 看 POST 到 `formspree.io/f/mojrnyel` 那筆 → Payload 看 **Form Data** 區的 `name` 值
+   - ✅ **正確 UTF-8**：`name: 王小明`（直接顯示中文）或 `name: %E7%8E%8B%E5%B0%8F%E6%98%8E`
+   - ❌ **還是 Big5**：`name: %A4%FD%A4p%A9%FA`
+4. 如果還是 Big5 → 告訴 Claude，需要更深入查（可能是 Astro build / Cloudflare 路徑 / 瀏覽器設定問題）
+5. 如果改 UTF-8 了 → 進入 Step 1 建 Make.com scenario
 
 ---
 
