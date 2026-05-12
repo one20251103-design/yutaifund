@@ -56,6 +56,41 @@
 
 ---
 
+## ✅ 2026-05-12 下午整條 pipeline 跑通了
+
+**端到端驗證通過**（Hank 親自填表單 → 個人 LINE 真的收到 Flex 卡片）：
+
+```
+Form (UTF-8) → Formspree → Gmail (Formspree-官網表單 label) → Make.com 3 模組 → 個人 LINE
+     ✓             ✓                  ✓                          ✓              ✓
+```
+
+### Step 0–3 完成紀錄
+
+| Step | 內容 | 結果 |
+|------|------|------|
+| Step 0 | Big5 → UTF-8 驗證 | `accept-charset="UTF-8"` + `_charset_=utf-8` 雙保險生效，LINE 卡片中文正確顯示 |
+| Step 1 | Make.com Scenario 砍重建 | 三模組 Gmail (1) → Text Parser (2) → LINE (3) 全綠勾 |
+| Step 2 | Formspree spam | 沒成為阻礙 |
+| Step 3 | 端到端測試 | LINE 收到完整 6 欄位 Flex 卡片 |
+
+### Make.com 最終生效設定
+
+- **Gmail Watch**: Folder = `All mail`, Label = `Formspree - 官網表單`, Criteria = `Only unread messages`, Mark as read = `Yes`
+- **Choose where to start**: `Choose manually`（從第一封 Formspree 信當起點）
+- **Text Parser**: 6 欄位 regex（含 Submitted stop anchor），全 optional 群組
+- **LINE**: Make an API Call → POST `/v2/bot/message/push`，Header 手動加 `Content-Type: application/json`（新版 UI 沒有 Body type 欄位了）
+- **Scheduling**: 每 2 小時 polling（Free plan 1000 ops/月安全範圍）
+
+### Debug 過程踩雷紀錄（給未來自己 / Claude）
+
+1. **Gmail filter skip inbox**：Hank 的 Formspree 信用 filter 自動歸到 `Formspree - 官網表單` 標籤、skip inbox。Make.com Gmail Watch 預設抓 `System folders: Inbox` → 0 筆。改 Folder = `All mail` + Label filter 解決
+2. **Choose where to start 設成 From now on 沒用**：因為要抓的測試信早於設定時間。改 `Choose manually` 直接指定那封信當起點
+3. **LINE 415 Content-Type null**：實際根因是 **Body JSON 語法錯**（漏一個 `"` 在 `{{2.phone}}` 後），Make.com parse 不出來連 header 都不送，LINE 誤判成 Content-Type 問題
+4. **新版 Make.com LINE 模組沒有 Body type 欄位**：要手動在 Headers 區加 `Content-Type: application/json`
+
+---
+
 ## 🚧 還沒收尾的事（明天優先處理）
 
 ### Step 0：先重測表單確認 Big5 → UTF-8 真的修了（**最關鍵**）
