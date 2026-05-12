@@ -288,7 +288,7 @@
 | 格 | 標題 | Action 類型 | URL / 內容 |
 |----|------|------------|-----------|
 | A (左上) | 鈺泰發 logo | Link | `https://yutaifund.tw/` （上線前用 `yutaifund.pages.dev`） |
-| B (中上) | 案例瀏覽 | Link | `https://yutaifund.tw/portfolio` |
+| B (中上) | 建案精選 | Link | `https://yutaifund.tw/portfolio` |
 | C (右上) | 專業服務 | Link | `https://yutaifund.tw/services` |
 | D (左下) | 買房指南 | Link | `https://yutaifund.tw/insights` |
 | E (中下) | 最新消息 | Link | `https://yutaifund.tw/news` |
