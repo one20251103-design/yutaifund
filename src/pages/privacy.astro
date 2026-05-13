@@ -23,7 +23,7 @@ import { SITE } from '~/lib/site';
         {SITE.fullName}（以下簡稱「本公司」）非常重視您的隱私權，並依《個人資料保護法》規範，制定本隱私權政策。
       </p>
       <p class="text-xs text-[var(--color-ink-500)]">
-        最後更新日期：2026 年 5 月 6 日
+        最後更新日期：2026 年 5 月 13 日
       </p>
     </div>
   </section>
@@ -49,8 +49,7 @@ import { SITE } from '~/lib/site';
           <ul class="space-y-2 mt-4 text-sm">
             <li>· 識別類：姓名、電話、Email</li>
             <li>· 需求類：地點偏好、預算範圍、購屋類型偏好</li>
-            <li>· 看屋登記：身分證字號（依房仲業實務需要，限看屋登記表使用）</li>
-            <li>· 自動蒐集：IP 位址、瀏覽紀錄、Cookie 識別碼（透過 Google Analytics、Meta Pixel）</li>
+            <li>· 自動蒐集：IP 位址、瀏覽紀錄、Cookie 識別碼。本網站使用 Google Tag Manager 為標籤容器，可能透過 GTM 載入 Google Analytics 4、Meta Pixel 等第三方分析與行銷服務，均經您於 Cookie 同意條款（採用 Google Consent Mode v2）同意後啟用</li>
           </ul>
         </section>
 
@@ -90,7 +89,10 @@ import { SITE } from '~/lib/site';
           <ul class="space-y-2 mt-4 text-sm">
             <li>· 合作建商（為媒合您查詢的建案，限必要範圍）</li>
             <li>· 表單服務商 Formspree（用於接收諮詢表單，資料儲存於美國）</li>
-            <li>· 分析服務商 Google Analytics、Meta Pixel（匿名化使用情境分析）</li>
+            <li>· 標籤管理：Google Tag Manager（容器服務，本身不蒐集個資）</li>
+            <li>· 流量分析：Google Analytics 4（待啟用；啟用後透過 GTM 載入，資料儲存於美國）</li>
+            <li>· 行銷追蹤：Meta Pixel（待啟用；啟用後透過 GTM 載入，資料儲存於美國）</li>
+            <li>· 上述分析與行銷服務均經 Cookie 同意條款管控，您可於同意條款中選擇拒絕</li>
             <li>· 法律要求（如政府機關依法令調閱）</li>
           </ul>
           <p class="mt-4">本公司不會將您的個人資料販售或租賃予任何第三方作行銷用途。</p>
@@ -137,6 +139,7 @@ import { SITE } from '~/lib/site';
           <p>如您對本隱私權政策有任何疑問，歡迎透過以下方式聯繫：</p>
           <ul class="space-y-2 mt-4 text-sm">
             <li>· 公司名稱：{SITE.fullName}</li>
+            <li>· 地址：{SITE.address}</li>
             <li>· 電話：<a href={`tel:${SITE.phone}`} class="text-[var(--color-gold-500)]">{SITE.phone}</a></li>
             <li>· Email：<a href={`mailto:${SITE.email}`} class="text-[var(--color-gold-500)]">{SITE.email}</a></li>
           </ul>
