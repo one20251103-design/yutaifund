@@ -1,0 +1,119 @@
+---
+import SubpageLayout from '~/layouts/SubpageLayout.astro';
+import { getAwardsList } from '~/lib/content';
+
+const awards = await getAwardsList();
+
+const SALES_HIGHLIGHTS = [
+  { num: '——', label: '年度成交件數', note: '待業主提供' },
+  { num: '——', label: '銷售總金額', note: '待業主提供' },
+  { num: '——', label: '客戶滿意度', note: '待業主提供' },
+];
+---
+
+<SubpageLayout
+  title="獲獎榮耀"
+  description="多年來的銷售實績與業界肯定，是我們對客戶承諾的最佳註腳。"
+  parentHref="/about"
+  eyebrow="AWARDS"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '關於我們', href: '/about' },
+    { name: '獲獎榮耀', href: '/about/awards' },
+  ]}
+>
+  <!-- 銷售亮點 -->
+  <section class="py-12 lg:py-16">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        SALES HIGHLIGHTS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        銷售實績亮點
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 border-y border-[var(--color-gold-200)]/40 py-12">
+        {SALES_HIGHLIGHTS.map((stat) => (
+          <div class="text-center">
+            <p class="text-4xl md:text-5xl font-light text-[var(--color-gold-500)] mb-3 tracking-wider font-display">
+              {stat.num}
+            </p>
+            <p class="text-sm text-[var(--color-ink-700)] tracking-wider">
+              {stat.label}
+            </p>
+            <p class="mt-1 text-[10px] text-[var(--color-ink-500)]/60 tracking-widest">
+              ({stat.note})
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 獎項清單 -->
+  <section class="py-16 lg:py-20 bg-[var(--color-cream-50)]">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        AWARDS LIST
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-4">
+        歷年獲獎紀錄
+      </h2>
+
+      {awards.length === 0 ? (
+        <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-white p-12 text-center mt-8">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+            待業主提供
+          </p>
+          <p class="text-base text-[var(--color-ink-700)] leading-relaxed mb-2">
+            獎項資料整備中
+          </p>
+          <p class="text-sm text-[var(--color-ink-500)]/80 leading-relaxed max-w-xl mx-auto">
+            請至 Sanity Studio 後台「🏆 獲獎榮耀」新增獎項：名稱、年份、頒獎單位、說明、獎牌照。
+          </p>
+        </div>
+      ) : (
+        <>
+          <p class="text-sm text-[var(--color-ink-500)] mb-12 max-w-2xl">
+            業主可於 Sanity Studio 後台直接新增、編輯、移除獎項紀錄。
+          </p>
+
+          <div class="space-y-4">
+            {awards.map((award) => (
+              <div class="border border-[var(--color-gold-200)]/50 bg-white p-6 md:p-8 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+                <div class="md:w-32 flex-shrink-0">
+                  <p class="text-3xl font-light text-[var(--color-gold-500)] font-display tracking-wider">
+                    {award.year}
+                  </p>
+                </div>
+                <div class="flex-1">
+                  <h3 class="text-lg font-light text-[var(--color-ink-900)] mb-2 leading-relaxed tracking-wide">
+                    {award.title}
+                  </h3>
+                  <p class="text-xs text-[var(--color-ink-500)] tracking-wider mb-2">
+                    頒獎單位：{award.organization}
+                  </p>
+                  {award.description && (
+                    <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+                      {award.description}
+                    </p>
+                  )}
+                </div>
+                {award.certificate && (
+                  <div class="md:w-32 flex-shrink-0">
+                    <img
+                      src={award.certificate}
+                      alt={award.title}
+                      class="w-full h-auto object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</SubpageLayout>

@@ -1,10 +1,13 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import NavIcon from '~/components/NavIcon.astro';
+import { NAV_ITEMS } from '~/lib/site';
+
+const aboutNav = NAV_ITEMS.find((item) => item.href === '/about');
+const aboutSubpages = aboutNav?.children ?? [];
 
 const ABOUT_HERO =
   'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80&auto=format&fit=crop';
-const ABOUT_OFFICE =
-  'https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1200&q=80&auto=format&fit=crop';
 ---
 
 <BaseLayout
@@ -16,7 +19,7 @@ const ABOUT_OFFICE =
   ]}
 >
   <!-- Hero -->
-  <section class="pt-32 pb-16 lg:pb-24">
+  <section class="pt-32 pb-16">
     <div class="container-custom">
       <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
         ABOUT US
@@ -31,7 +34,7 @@ const ABOUT_OFFICE =
   </section>
 
   <!-- Hero 圖 -->
-  <section class="pb-16 lg:pb-24">
+  <section class="pb-16 lg:pb-20">
     <div class="container-custom">
       <div class="aspect-[21/9] overflow-hidden">
         <img
@@ -44,76 +47,44 @@ const ABOUT_OFFICE =
     </div>
   </section>
 
-  <!-- 三方共贏理念 -->
-  <section class="py-16 lg:py-24 bg-[var(--color-cream-50)]">
+  <!-- 6 個子頁卡片導覽 -->
+  <section class="pb-20 lg:pb-28">
     <div class="container-custom">
-      <div class="max-w-2xl mb-16">
-        <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
-          OUR PHILOSOPHY
-        </p>
-        <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
-          三方共贏的核心理念
-        </h2>
-        <p class="text-base text-[var(--color-ink-500)] leading-relaxed">
-          房地產交易是一場長期的合作關係，唯有買家、屋主、建商三方都安心，才是好的成交。
-        </p>
-      </div>
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        EXPLORE
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        深入了解鈺泰發
+      </h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-        {[
-          { num: '01', title: '鈺泰用心', desc: '從物件盤點到客戶服務，每一個環節皆以專業與細心對待。我們重視「品質」遠勝「速度」。' },
-          { num: '02', title: '購屋安心', desc: '透明資訊、合理估價、誠實揭露，讓每位買家都能基於完整資訊做決定，不被資訊不對稱影響權益。' },
-          { num: '03', title: '建商放心', desc: '專業代銷團隊維護建商品牌口碑，協助建商精準觸達合適買家，避免低品質媒合造成的信任損失。' },
-        ].map((item) => (
-          <div>
-            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
-              {item.num}
-            </p>
-            <h3 class="text-2xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
-              {item.title}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {aboutSubpages.map((page, i) => (
+          <a
+            href={page.href}
+            class="group flex flex-col bg-white border border-[var(--color-gold-200)]/40 p-7 hover:border-[var(--color-gold-400)] hover:shadow-md transition-all duration-300"
+          >
+            <div class="flex items-start justify-between mb-6">
+              {page.icon && (
+                <span class="w-12 h-12 flex items-center justify-center rounded-md bg-[var(--color-cream-100)] group-hover:bg-[var(--color-gold-100)] text-[var(--color-gold-600)] transition-colors">
+                  <NavIcon name={page.icon} class="w-6 h-6" />
+                </span>
+              )}
+              <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display">
+                {String(i + 1).padStart(2, '0')}
+              </p>
+            </div>
+            <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-3 tracking-wider group-hover:text-[var(--color-gold-600)] transition-colors">
+              {page.label}
             </h3>
-            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
-              {item.desc}
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed mb-6 flex-1">
+              {page.description}
             </p>
-          </div>
+            <span class="inline-flex items-center gap-2 text-sm tracking-widest text-[var(--color-gold-600)] group-hover:text-[var(--color-gold-700)]">
+              了解更多
+              <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+            </span>
+          </a>
         ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- 在地深耕 -->
-  <section class="py-16 lg:py-24">
-    <div class="container-custom">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        <div class="aspect-[4/5] overflow-hidden">
-          <img
-            src={ABOUT_OFFICE}
-            alt="專業諮詢服務"
-            class="w-full h-full object-cover"
-            loading="lazy"
-          />
-        </div>
-
-        <div>
-          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
-            ROOTED IN YILAN
-          </p>
-          <h2 class="text-3xl md:text-4xl font-light tracking-wide text-[var(--color-ink-900)] mb-8">
-            紮根宜蘭，<br />理解這片土地
-          </h2>
-
-          <div class="space-y-5 text-base text-[var(--color-ink-500)] leading-relaxed">
-            <p>
-              鈺泰發行銷由具備房地產實務經驗的團隊成立，深耕宜蘭在地市場。我們深信，地段不只是經緯度——每一條巷弄的氣味、每一個社區的鄰里結構、每一片山景的季節變化，都會影響買家未來十年的居住體驗。
-            </p>
-            <p>
-              我們的差異化在於「細節品質」：每一個物件皆經過實地勘查、合理估價與透明揭露；每一份合約皆逐條解讀；每一次交付皆協助驗收。這不是理所當然，而是我們選擇做的事。
-            </p>
-            <p class="text-[var(--color-ink-900)] font-medium pt-4">
-              我們不只是仲介，更是您購屋路上的專業夥伴。
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -126,10 +97,10 @@ const ABOUT_OFFICE =
       </h2>
       <div class="flex flex-wrap gap-4 justify-center">
         <a
-          href="/services"
+          href="/portfolio"
           class="inline-flex items-center gap-2 px-7 py-3.5 bg-[var(--color-gold-400)] hover:bg-[var(--color-gold-500)] text-white text-sm tracking-wider rounded-full transition-colors"
         >
-          專業服務介紹
+          瀏覽精選建案
         </a>
         <a
           href="/contact"

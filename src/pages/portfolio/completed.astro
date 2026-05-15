@@ -1,0 +1,137 @@
+---
+import SubpageLayout from '~/layouts/SubpageLayout.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import { getPortfolioList } from '~/lib/content';
+
+const allProjects = await getPortfolioList();
+// 經典實績暫用所有 demo 資料（待業主標記 status=completed 後改 filter）
+const completedProjects = allProjects;
+---
+
+<SubpageLayout
+  title="經典實績"
+  description="鈺泰發過去經手的代銷實績，每一案皆是我們對品質與安心的承諾。"
+  parentHref="/portfolio"
+  eyebrow="COMPLETED"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '建案代銷', href: '/portfolio' },
+    { name: '經典實績', href: '/portfolio/completed' },
+  ]}
+>
+  <!-- 統計概覽 -->
+  <section class="py-12 lg:py-16">
+    <div class="container-custom">
+      <div class="grid grid-cols-3 gap-4 md:gap-8 border-y border-[var(--color-gold-200)]/40 py-10">
+        <div class="text-center">
+          <p class="text-4xl md:text-5xl font-light text-[var(--color-gold-500)] mb-2 tracking-wider font-display">
+            10
+          </p>
+          <p class="text-xs md:text-sm text-[var(--color-ink-700)] tracking-wider">
+            經典代銷案
+          </p>
+        </div>
+        <div class="text-center">
+          <p class="text-4xl md:text-5xl font-light text-[var(--color-gold-500)] mb-2 tracking-wider font-display">
+            ——
+          </p>
+          <p class="text-xs md:text-sm text-[var(--color-ink-700)] tracking-wider">
+            累積成交戶數
+          </p>
+        </div>
+        <div class="text-center">
+          <p class="text-4xl md:text-5xl font-light text-[var(--color-gold-500)] mb-2 tracking-wider font-display">
+            ——
+          </p>
+          <p class="text-xs md:text-sm text-[var(--color-ink-700)] tracking-wider">
+            累積銷售金額
+          </p>
+        </div>
+      </div>
+      <p class="mt-6 text-xs text-[var(--color-ink-500)]/70 tracking-wider text-center">
+        ※ 實際數字待業主提供。
+      </p>
+    </div>
+  </section>
+
+  <!-- 案例展示 -->
+  <section class="pb-16 lg:pb-20">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        SHOWCASE
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        經典代銷實績
+      </h2>
+
+      {completedProjects.length === 0 ? (
+        <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-[var(--color-cream-50)]/40 p-12 text-center">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+            待業主提供
+          </p>
+          <p class="text-base text-[var(--color-ink-700)] leading-relaxed mb-2">
+            十大經典實績整備中
+          </p>
+          <p class="text-sm text-[var(--color-ink-500)]/80 leading-relaxed max-w-xl mx-auto">
+            敬請鈺泰發提供 10 案資料：建案名、地點、戶數、樓層、銷售期、結案時間、外觀照、配置圖。
+          </p>
+        </div>
+      ) : (
+        <>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {completedProjects.map((project) => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+          <p class="mt-10 text-xs text-[var(--color-ink-500)]/70 tracking-wider text-center">
+            ※ 以上為服務概念示範（Concept Study），實際結案資料待業主提供後更新。
+          </p>
+        </>
+      )}
+    </div>
+  </section>
+
+  <!-- 信任原因 -->
+  <section class="py-16 lg:py-20 bg-[var(--color-cream-50)]">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        WHY TRUST US
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        為什麼建商與買家持續選擇我們
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white border border-[var(--color-gold-200)]/40 p-8">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-3">
+            FOR DEVELOPERS
+          </p>
+          <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+            建商選擇我們的理由
+          </h3>
+          <ul class="space-y-3 text-sm text-[var(--color-ink-500)] leading-relaxed">
+            <li class="flex gap-3"><span class="text-[var(--color-gold-500)]">·</span><span>專業代銷團隊維護建商品牌口碑</span></li>
+            <li class="flex gap-3"><span class="text-[var(--color-gold-500)]">·</span><span>精準觸達合適買家，避免低品質媒合</span></li>
+            <li class="flex gap-3"><span class="text-[var(--color-gold-500)]">·</span><span>透明的銷售進度回報與數據分析</span></li>
+            <li class="flex gap-3"><span class="text-[var(--color-gold-500)]">·</span><span>完善的售後客戶關係維護</span></li>
+          </ul>
+        </div>
+
+        <div class="bg-white border border-[var(--color-gold-200)]/40 p-8">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-3">
+            FOR BUYERS
+          </p>
+          <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+            買家選擇我們的理由
+          </h3>
+          <ul class="space-y-3 text-sm text-[var(--color-ink-500)] leading-relaxed">
+            <li class="flex gap-3"><span class="text-[var(--color-gold-500)]">·</span><span>透明資訊、合理估價、誠實揭露</span></li>
+            <li class="flex gap-3"><span class="text-[var(--color-gold-500)]">·</span><span>陪同看屋與合約逐條解讀</span></li>
+            <li class="flex gap-3"><span class="text-[var(--color-gold-500)]">·</span><span>協助貸款規劃與較佳利率爭取</span></li>
+            <li class="flex gap-3"><span class="text-[var(--color-gold-500)]">·</span><span>交屋驗收與後續服務不打折</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</SubpageLayout>

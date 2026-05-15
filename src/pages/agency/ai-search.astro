@@ -1,0 +1,137 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { SITE } from '~/lib/site';
+
+const AI_FEATURES = [
+  {
+    icon: '🔍',
+    title: '自然語言搜尋',
+    desc: '輸入「礁溪三房預算 1500 萬內」即可即時推薦符合條件的物件，無需逐項勾選篩選器。',
+  },
+  {
+    icon: '🎯',
+    title: '智能媒合推薦',
+    desc: '根據您的偏好（地段、坪數、預算、屋齡），系統自動推薦最匹配的前 10 個物件。',
+  },
+  {
+    icon: '📊',
+    title: '行情透明分析',
+    desc: '即時比對實價登錄、區域均價、租金回報率，協助您做出資訊充足的決策。',
+  },
+];
+---
+
+<BaseLayout
+  title="House AI 搜尋"
+  description="鈺泰發行銷 House AI 智能物件搜尋系統，自然語言輸入即可媒合符合需求的買賣與租屋物件。"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '仲介服務', href: '/agency' },
+    { name: 'House AI 搜尋', href: '/agency/ai-search' },
+  ]}
+>
+  <section class="pt-32 pb-12">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+        HOUSE AI
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8 max-w-4xl">
+        用一句話<br />找到您想要的家
+      </h1>
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        House AI 整合鈺泰發在地物件資料庫與 AI 智能演算法，您只需描述需求，系統即可在數秒內推薦最匹配的物件。
+      </p>
+    </div>
+  </section>
+
+  <!-- 搜尋框 placeholder -->
+  <section class="pb-16 lg:pb-24">
+    <div class="container-custom max-w-3xl">
+      <div class="bg-white border border-[var(--color-gold-300)]/50 shadow-sm p-2 flex items-center gap-2">
+        <input
+          type="text"
+          placeholder="例：礁溪三房預算 1500 萬內，最好有溫泉"
+          disabled
+          class="flex-1 px-4 py-4 text-base bg-transparent outline-none text-[var(--color-ink-700)] placeholder:text-[var(--color-ink-500)]/70 disabled:cursor-not-allowed"
+        />
+        <button
+          disabled
+          type="button"
+          class="px-6 py-3.5 bg-[var(--color-gold-400)]/60 text-white text-sm tracking-widest rounded-full cursor-not-allowed"
+        >
+          搜尋
+        </button>
+      </div>
+      <p class="mt-4 text-xs text-[var(--color-ink-500)] tracking-wider text-center">
+        ※ AI 搜尋功能開發中，預計上線時間待確認。
+      </p>
+    </div>
+  </section>
+
+  <!-- 功能特色 -->
+  <section class="pb-16 lg:pb-24 bg-[var(--color-cream-50)] py-20">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        FEATURES
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        三大核心功能
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {AI_FEATURES.map((feature) => (
+          <div class="bg-white border border-[var(--color-gold-200)]/40 p-8">
+            <p class="text-3xl mb-4">{feature.icon}</p>
+            <h3 class="text-lg font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+              {feature.title}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+              {feature.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 規格待釐清 -->
+  <section class="pb-16 lg:pb-24 py-16">
+    <div class="container-custom max-w-3xl">
+      <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-[var(--color-cream-50)]/40 p-10">
+        <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+          SPEC TO BE CONFIRMED
+        </p>
+        <h2 class="text-xl md:text-2xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+          開發規格待業主決策
+        </h2>
+        <ul class="space-y-3 text-sm text-[var(--color-ink-500)] leading-relaxed">
+          <li>· <strong class="text-[var(--color-ink-700)]">技術路線</strong>：(A) AI 對話搜尋 / (B) AI 推薦演算法 / (C) 智能篩選器</li>
+          <li>· <strong class="text-[var(--color-ink-700)]">資料來源</strong>：自家物件 / JGB 後台 / 實價登錄 API</li>
+          <li>· <strong class="text-[var(--color-ink-700)]">預算範圍</strong>：A 案月維運成本 NT$ 5,000+；C 案約一次性 NT$ 30,000–50,000</li>
+          <li>· <strong class="text-[var(--color-ink-700)]">上線時程</strong>：MVP 約 2–4 週、正式版約 8–12 週</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-[var(--color-cream-50)] border-t border-[var(--color-gold-200)]/30">
+    <div class="container-custom max-w-3xl text-center">
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        想搶先體驗？
+      </h2>
+      <p class="text-sm text-[var(--color-ink-500)] mb-8 leading-relaxed">
+        AI 搜尋上線前，歡迎透過 LINE 或服務專線告訴我們您的需求，由專人協助媒合。
+      </p>
+      <a
+        href={SITE.lineAddFriendUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-7 py-3.5 text-white text-sm tracking-wider rounded-full transition-colors"
+        style="background-color: #06C755"
+      >
+        LINE 預約諮詢
+      </a>
+    </div>
+  </section>
+</BaseLayout>

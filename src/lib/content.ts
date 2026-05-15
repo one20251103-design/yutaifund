@@ -17,6 +17,11 @@ import { sanityClient, isSanityConfigured, queries } from './sanity';
 import { news as localNews, type News } from '~/data/news';
 import { insights as localInsights, type Insight } from '~/data/insights';
 import { projects as localProjects, type Project } from '~/data/projects';
+import { team as localTeam, type TeamMember } from '~/data/team';
+import { awards as localAwards, type Award } from '~/data/awards';
+import { groupCompanies as localGroup, type GroupCompany } from '~/data/group';
+import { csrActivities as localCsr, type CsrActivity } from '~/data/csr';
+import { defaultSiteSettings, type SiteSettings } from '~/data/siteSettings';
 
 // 統一回傳型態（兼容 Sanity + 本機）
 export type NewsItem = {
@@ -171,6 +176,51 @@ export async function getPortfolioBySlug(slug: string): Promise<ProjectItem | nu
     console.warn('[sanity] portfolio by slug failed, fallback', err);
     return localProjects.map(normalizeLocalProject).find((p) => p.slug === slug) || null;
   }
+}
+
+// ── Site Settings ───────────────────────────────────────────
+export async function getSiteSettings(): Promise<SiteSettings> {
+  if (!isSanityConfigured) return defaultSiteSettings;
+  try {
+    const data = await sanityClient.fetch<SiteSettings | null>(queries.siteSettings, {});
+    if (!data) return defaultSiteSettings;
+    return { ...defaultSiteSettings, ...data };
+  } catch (err) {
+    console.warn('[sanity] siteSettings fetch failed, fallback', err);
+    return defaultSiteSettings;
+  }
+}
+
+// ── Team ────────────────────────────────────────────────────
+export async function getTeamList(): Promise<TeamMember[]> {
+  return fetchOrFallback<TeamMember[], TeamMember[]>(
+    queries.teamList,
+    localTeam,
+  );
+}
+
+// ── Awards ──────────────────────────────────────────────────
+export async function getAwardsList(): Promise<Award[]> {
+  return fetchOrFallback<Award[], Award[]>(
+    queries.awardsList,
+    localAwards,
+  );
+}
+
+// ── Group Companies ─────────────────────────────────────────
+export async function getGroupCompaniesList(): Promise<GroupCompany[]> {
+  return fetchOrFallback<GroupCompany[], GroupCompany[]>(
+    queries.groupCompaniesList,
+    localGroup,
+  );
+}
+
+// ── CSR Activities ──────────────────────────────────────────
+export async function getCsrActivitiesList(): Promise<CsrActivity[]> {
+  return fetchOrFallback<CsrActivity[], CsrActivity[]>(
+    queries.csrActivitiesList,
+    localCsr,
+  );
 }
 
 // 給 getStaticPaths 用：取所有 slug

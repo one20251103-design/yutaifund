@@ -1,66 +1,95 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import ProjectCard from '~/components/ProjectCard.astro';
-import { getPortfolioList } from '~/lib/content';
+import NavIcon from '~/components/NavIcon.astro';
+import { NAV_ITEMS } from '~/lib/site';
 
-const projects = await getPortfolioList();
+const portfolioNav = NAV_ITEMS.find((item) => item.href === '/portfolio');
+const portfolioSubpages = portfolioNav?.children ?? [];
+
+const SUBPAGE_ACCENTS: Record<string, { image: string; cta: string }> = {
+  '/portfolio/upcoming': {
+    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&q=80&auto=format&fit=crop',
+    cta: '搶先掌握',
+  },
+  '/portfolio/hot': {
+    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&q=80&auto=format&fit=crop',
+    cta: '立即看屋',
+  },
+  '/portfolio/completed': {
+    image: 'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=1200&q=80&auto=format&fit=crop',
+    cta: '回顧實績',
+  },
+};
 ---
 
 <BaseLayout
-  title="建案精選"
-  description="鈺泰發行銷代銷與經手案例展示，包含新成屋與中古屋分類。"
+  title="建案代銷"
+  description="鈺泰發行銷代銷與經手案例展示，依銷售階段分為即將公開、熱銷中、已結案經典實績三大類。"
   breadcrumbs={[
     { name: '首頁', href: '/' },
-    { name: '建案精選', href: '/portfolio' },
+    { name: '建案代銷', href: '/portfolio' },
   ]}
 >
+  <!-- Hero -->
   <section class="pt-32 pb-12">
     <div class="container-custom">
       <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
         PORTFOLIO
       </p>
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8">
-        建案精選
+        建案代銷
       </h1>
       <p class="text-base text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
-        以下為鈺泰發在不同地段、不同物件類型上的服務概念示範。實際案場資料正陸續從 CMS 串接，敬請期待。
+        鈺泰發行銷代銷的精選建案，依銷售階段分為三大類。請點選下方分類查看詳細物件資訊。
       </p>
     </div>
   </section>
 
+  <!-- 3 個子頁卡片導覽 -->
   <section class="pb-24 lg:pb-32">
     <div class="container-custom">
-      <!-- Tabs（目前用錨點，全部資料一次顯示；未來接 Sanity 後改 client-side filter） -->
-      <div class="flex gap-2 md:gap-4 border-b border-[var(--color-gold-200)]/40 mb-12">
-        <a
-          href="#all"
-          class="px-5 py-3 text-sm tracking-widest text-[var(--color-ink-900)] border-b-2 border-[var(--color-gold-400)]"
-        >
-          全部
-        </a>
-        <a
-          href="#new"
-          class="px-5 py-3 text-sm tracking-widest text-[var(--color-ink-500)] hover:text-[var(--color-ink-900)] transition-colors"
-        >
-          新成屋建案
-        </a>
-        <a
-          href="#used"
-          class="px-5 py-3 text-sm tracking-widest text-[var(--color-ink-500)] hover:text-[var(--color-ink-900)] transition-colors"
-        >
-          中古屋
-        </a>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {portfolioSubpages.map((page, i) => {
+          const accent = SUBPAGE_ACCENTS[page.href] ?? SUBPAGE_ACCENTS['/portfolio/hot'];
+          return (
+            <a
+              href={page.href}
+              class="group block bg-white border border-[var(--color-gold-200)]/40 overflow-hidden hover:border-[var(--color-gold-400)] hover:shadow-md transition-all duration-300"
+            >
+              <div class="aspect-[4/3] overflow-hidden relative">
+                <img
+                  src={accent.image}
+                  alt={page.label}
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div class="absolute top-4 left-4 px-3 py-1.5 bg-white/90 backdrop-blur-sm text-xs tracking-[0.2em] text-[var(--color-ink-900)]">
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+              </div>
+              <div class="p-7">
+                <div class="flex items-center gap-3 mb-3">
+                  {page.icon && (
+                    <span class="w-9 h-9 flex items-center justify-center rounded-md bg-[var(--color-cream-100)] group-hover:bg-[var(--color-gold-100)] text-[var(--color-gold-600)] transition-colors">
+                      <NavIcon name={page.icon} class="w-5 h-5" />
+                    </span>
+                  )}
+                  <h3 class="text-xl font-light text-[var(--color-ink-900)] tracking-wider group-hover:text-[var(--color-gold-600)] transition-colors">
+                    {page.label}
+                  </h3>
+                </div>
+                <p class="text-sm text-[var(--color-ink-500)] leading-relaxed mb-5">
+                  {page.description}
+                </p>
+                <span class="inline-flex items-center gap-2 text-sm tracking-widest text-[var(--color-gold-600)] group-hover:text-[var(--color-gold-700)]">
+                  {accent.cta}
+                  <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </div>
+            </a>
+          );
+        })}
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="all">
-        {projects.map((project) => (
-          <ProjectCard project={project} />
-        ))}
-      </div>
-
-      <p class="mt-16 text-xs text-[var(--color-ink-500)] text-center tracking-wider">
-        以上為服務概念示範（Concept Study），非實際代銷案場。
-      </p>
     </div>
   </section>
 </BaseLayout>

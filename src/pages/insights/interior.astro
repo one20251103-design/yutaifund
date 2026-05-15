@@ -1,0 +1,175 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { SITE } from '~/lib/site';
+
+const RENO_STAGES = [
+  {
+    num: '01',
+    title: '需求與預算規劃',
+    desc: '釐清生活型態、家庭成員、收納需求，並設定總預算（建議含 10% 變動緩衝）。',
+  },
+  {
+    num: '02',
+    title: '設計師媒合',
+    desc: '依風格偏好（北歐 / 日式 / 現代 / 古典）與預算範圍找尋適合的設計團隊。',
+  },
+  {
+    num: '03',
+    title: '丈量與初步規劃',
+    desc: '設計師到現場丈量、了解結構限制、確認管線位置與屋況問題。',
+  },
+  {
+    num: '04',
+    title: '設計圖與報價',
+    desc: '平面配置圖、3D 透視圖、材料樣板與工程報價單，逐項確認後簽約。',
+  },
+  {
+    num: '05',
+    title: '施工監造',
+    desc: '依工序施工（拆除、泥作、水電、木作、油漆），業主可參與重要驗收節點。',
+  },
+  {
+    num: '06',
+    title: '驗收交屋',
+    desc: '逐項驗收、缺失記錄、保固範圍確認，並收齊裝修廢棄物清運證明。',
+  },
+];
+
+const RENO_BUDGET = [
+  { type: '輕裝修（換地板、漆牆、輕隔間）', range: '每坪 NT$ 2 ~ 4 萬' },
+  { type: '中度裝修（廚衛翻新、系統櫃）', range: '每坪 NT$ 4 ~ 8 萬' },
+  { type: '完整裝修（全屋改造、客製化）', range: '每坪 NT$ 8 ~ 15 萬以上' },
+];
+---
+
+<BaseLayout
+  title="室內裝修"
+  description="從毛胚屋到入住的設計與裝修知識，預算控管、工法選擇、合約注意事項——鈺泰發行銷為您整理裝修必修課。"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '房市與交易資訊', href: '/insights' },
+    { name: '室內裝修', href: '/insights/interior' },
+  ]}
+>
+  <section class="pt-32 pb-12">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+        INTERIOR
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8">
+        室內裝修指南
+      </h1>
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        買到房子只是第一步。從毛胚屋到入住的這段路，預算控管、設計溝通、施工監造都需要專業判斷。
+      </p>
+    </div>
+  </section>
+
+  <!-- 六大階段 -->
+  <section class="pb-16 lg:pb-24">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        STAGES
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        裝修六大階段
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {RENO_STAGES.map((stage) => (
+          <div class="bg-white border border-[var(--color-gold-200)]/40 p-6">
+            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-3">
+              {stage.num}
+            </p>
+            <h3 class="text-lg font-light text-[var(--color-ink-900)] mb-3 tracking-wider">
+              {stage.title}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+              {stage.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 預算參考 -->
+  <section class="pb-16 lg:pb-24 bg-[var(--color-cream-50)] py-16">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        BUDGET
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        裝修預算參考
+      </h2>
+
+      <div class="border border-[var(--color-gold-200)]/40 bg-white">
+        <table class="w-full text-sm">
+          <thead class="bg-[var(--color-cream-100)] text-[var(--color-ink-700)] tracking-widest">
+            <tr>
+              <th class="px-6 py-4 text-left font-medium">裝修等級</th>
+              <th class="px-6 py-4 text-left font-medium">預算範圍</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--color-gold-200)]/30 text-[var(--color-ink-700)]">
+            {RENO_BUDGET.map((item) => (
+              <tr class="hover:bg-[var(--color-cream-50)]/60">
+                <td class="px-6 py-4 font-light">{item.type}</td>
+                <td class="px-6 py-4 text-[var(--color-gold-700)] tracking-wider">{item.range}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-xs text-[var(--color-ink-500)]/70 tracking-wider">
+        ※ 以上為市場參考行情，實際預算依屋況、選材、設計複雜度而異。
+      </p>
+    </div>
+  </section>
+
+  <!-- 合作設計團隊 placeholder -->
+  <section class="pb-16 lg:pb-24">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        PARTNERS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-10">
+        合作設計團隊
+      </h2>
+
+      <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-[var(--color-cream-50)]/40 p-12 text-center">
+        <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+          待業主提供
+        </p>
+        <p class="text-base text-[var(--color-ink-700)] leading-relaxed mb-2">
+          設計合作夥伴清單整備中
+        </p>
+        <p class="text-sm text-[var(--color-ink-500)]/80 leading-relaxed max-w-xl mx-auto">
+          敬請鈺泰發提供：合作的設計工作室名單、設計師作品照、合作條件。<br />
+          可串接「一方圓設計」作為集團合作夥伴介紹。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-[var(--color-cream-50)] border-t border-[var(--color-gold-200)]/30">
+    <div class="container-custom max-w-3xl text-center">
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        想找信任的設計團隊？
+      </h2>
+      <p class="text-sm text-[var(--color-ink-500)] mb-8 leading-relaxed">
+        鈺泰發整合在地優質設計團隊，可依您的需求媒合合適的設計師。
+      </p>
+      <a
+        href={SITE.lineAddFriendUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-7 py-3.5 text-white text-sm tracking-wider rounded-full transition-colors"
+        style="background-color: #06C755"
+      >
+        LINE 諮詢裝修需求
+      </a>
+    </div>
+  </section>
+</BaseLayout>

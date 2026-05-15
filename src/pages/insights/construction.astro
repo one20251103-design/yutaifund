@@ -1,0 +1,168 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { SITE } from '~/lib/site';
+
+const STRUCTURE_TYPES = [
+  {
+    name: 'RC 鋼筋混凝土',
+    desc: '台灣最常見的住宅結構工法，由鋼筋與混凝土結合而成，具有良好抗震與隔音表現。',
+    pros: '隔音佳、防火性高、施工成本相對低',
+    cons: '結構自重大、施工期較長',
+    suitFor: '中低樓層住宅（15 層以下）',
+  },
+  {
+    name: 'SRC 鋼骨鋼筋混凝土',
+    desc: '結合鋼骨與 RC 雙重優勢，內含鋼骨支撐、外包鋼筋混凝土，兼具強度與耐久性。',
+    pros: '抗震性最佳、耐久度高、適合高層',
+    cons: '建造成本較高、工期較長',
+    suitFor: '中高樓層住宅（15 層以上）',
+  },
+  {
+    name: 'SC 純鋼骨',
+    desc: '主結構以鋼骨組成，自重輕、可塑性高，常見於商業大樓與超高層建築。',
+    pros: '自重輕、施工速度快、跨距大',
+    cons: '隔音較差、需特殊防火處理',
+    suitFor: '商業大樓、超高層建築（25 層以上）',
+  },
+];
+
+const SEISMIC_LEVELS = [
+  { level: '耐震標章', desc: '建築物耐震性能符合內政部審查標準，性能優於法規最低要求。' },
+  { level: '金級耐震標章', desc: '結構性能高於一般耐震標章，能承受更大震度而結構不受損。' },
+  { level: '鑽石級耐震標章', desc: '最高等級認證，採用減震 / 隔震技術，具備地震後立即可使用的能力。' },
+];
+---
+
+<BaseLayout
+  title="建築工法"
+  description="RC、SRC、SC 三大結構工法解析，耐震標章等級對照——讀懂建築技術，買房不再霧裡看花。"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '房市與交易資訊', href: '/insights' },
+    { name: '建築工法', href: '/insights/construction' },
+  ]}
+>
+  <section class="pt-32 pb-12">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+        CONSTRUCTION
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8">
+        建築工法與耐震標章
+      </h1>
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        建築工法決定了房子的結構安全、耐久度與居住品質。買房前，先了解 RC、SRC、SC 三大主流工法的差異與耐震等級。
+      </p>
+    </div>
+  </section>
+
+  <!-- 三大結構工法 -->
+  <section class="pb-16 lg:pb-24">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        STRUCTURE TYPES
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        三大住宅結構工法
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {STRUCTURE_TYPES.map((s) => (
+          <div class="bg-white border border-[var(--color-gold-200)]/40 p-8">
+            <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+              {s.name}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed mb-5">
+              {s.desc}
+            </p>
+            <div class="space-y-2 text-xs text-[var(--color-ink-700)] tracking-wider">
+              <p><span class="text-[var(--color-gold-600)]">優點：</span>{s.pros}</p>
+              <p><span class="text-[var(--color-ink-500)]">缺點：</span>{s.cons}</p>
+              <p><span class="text-[var(--color-gold-500)]">適用：</span>{s.suitFor}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 耐震標章 -->
+  <section class="pb-16 lg:pb-24 bg-[var(--color-cream-50)] py-16">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        SEISMIC LABEL
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        耐震標章三大等級
+      </h2>
+      <p class="text-sm text-[var(--color-ink-500)] mb-12 max-w-2xl leading-relaxed">
+        耐震標章由內政部建研所推動，是台灣官方對建築物抗震能力的權威認證。等級越高，地震時的安全性越強。
+      </p>
+
+      <div class="space-y-6">
+        {SEISMIC_LEVELS.map((s, i) => (
+          <div class="bg-white border border-[var(--color-gold-200)]/40 p-8 flex flex-col md:flex-row gap-6 items-start">
+            <div class="flex-shrink-0 w-16 h-16 flex items-center justify-center bg-[var(--color-gold-100)] rounded-full">
+              <span class="text-2xl font-light text-[var(--color-gold-600)] font-display">
+                {i + 1}
+              </span>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-3 tracking-wider">
+                {s.level}
+              </h3>
+              <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+                {s.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 鈺泰發合作建案的工法 placeholder -->
+  <section class="pb-16 lg:pb-24">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        OUR PROJECTS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-10">
+        鈺泰發代銷建案的工法
+      </h2>
+
+      <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-[var(--color-cream-50)]/40 p-12 text-center">
+        <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+          待業主提供
+        </p>
+        <p class="text-base text-[var(--color-ink-700)] leading-relaxed mb-2">
+          代銷建案工法整理中
+        </p>
+        <p class="text-sm text-[var(--color-ink-500)]/80 leading-relaxed max-w-xl mx-auto">
+          敬請鈺泰發提供：合作建商常用工法、是否取得耐震標章、建材選用標準。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-[var(--color-cream-50)] border-t border-[var(--color-gold-200)]/30">
+    <div class="container-custom max-w-3xl text-center">
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        想了解特定建案的工法細節？
+      </h2>
+      <p class="text-sm text-[var(--color-ink-500)] mb-8 leading-relaxed">
+        鈺泰發提供逐案的工法揭露與結構解說，協助您理解每一棟房子的「骨架」。
+      </p>
+      <a
+        href={SITE.lineAddFriendUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-7 py-3.5 text-white text-sm tracking-wider rounded-full transition-colors"
+        style="background-color: #06C755"
+      >
+        LINE 諮詢建築工法
+      </a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,107 @@
+---
+import SubpageLayout from '~/layouts/SubpageLayout.astro';
+import ProjectCard from '~/components/ProjectCard.astro';
+import { SITE } from '~/lib/site';
+
+// 即將公開建案資料（待業主提供，先空陣列）
+const upcomingProjects: any[] = [];
+
+const REGISTRATION_BENEFITS = [
+  { num: '01', title: '尊榮看屋', desc: '建案正式公開前，意向登錄者可享提前看屋與深度導覽。' },
+  { num: '02', title: '優先選戶', desc: '銷售啟動時，意向登錄客戶享有優先選戶權益。' },
+  { num: '03', title: '即時通知', desc: '透過 LINE 即時推送建案進度、開放賞屋時間與優惠資訊。' },
+];
+---
+
+<SubpageLayout
+  title="即將公開建案"
+  description="搶先掌握新案資訊。意向登錄者可享尊榮看屋與優先選戶權益。"
+  parentHref="/portfolio"
+  eyebrow="COMING SOON"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '建案代銷', href: '/portfolio' },
+    { name: '即將公開建案', href: '/portfolio/upcoming' },
+  ]}
+>
+  <!-- 物件清單 -->
+  <section class="py-16 lg:py-20">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        UPCOMING PROJECTS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        即將公開建案
+      </h2>
+
+      {upcomingProjects.length === 0 ? (
+        <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-[var(--color-cream-50)]/40 p-12 text-center">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+            待業主提供
+          </p>
+          <p class="text-base text-[var(--color-ink-700)] leading-relaxed mb-2">
+            即將公開建案資訊整備中
+          </p>
+          <p class="text-sm text-[var(--color-ink-500)]/80 leading-relaxed max-w-xl mx-auto">
+            敬請鈺泰發提供：建案名稱、預定公開時間、地段、戶數、坪數區間、外觀示意圖。
+          </p>
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {upcomingProjects.map((project) => (
+            <ProjectCard project={project} />
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- 意向登錄好處 -->
+  <section class="py-16 lg:py-20 bg-[var(--color-cream-50)]">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        REGISTRATION BENEFITS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        意向登錄三大權益
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {REGISTRATION_BENEFITS.map((item) => (
+          <div class="bg-white border border-[var(--color-gold-200)]/40 p-8">
+            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-3">
+              {item.num}
+            </p>
+            <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+              {item.title}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+              {item.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-16 lg:py-20">
+    <div class="container-custom max-w-3xl text-center">
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        想搶先掌握新案資訊？
+      </h2>
+      <p class="text-sm text-[var(--color-ink-500)] mb-8 leading-relaxed">
+        加入 LINE 即時諮詢，新案開放賞屋時，我們會優先通知您。
+      </p>
+      <a
+        href={SITE.lineAddFriendUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-7 py-3.5 text-white text-sm tracking-wider rounded-full transition-colors"
+        style="background-color: #06C755"
+      >
+        加入 LINE 意向登錄
+      </a>
+    </div>
+  </section>
+</SubpageLayout>

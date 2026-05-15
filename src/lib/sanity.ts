@@ -49,4 +49,26 @@ export const queries = {
   insightBySlug: `*[_type == "insight" && slug.current == $slug][0]{
     _id, title, slug, publishedAt, body, category, "coverImage": coverImage.asset->url
   }`,
+  // 公司資訊（Singleton，永遠 documentId == "siteSettings"）
+  siteSettings: `*[_type == "siteSettings"][0]{
+    _id, companyName, brandName, englishName, slogan, description,
+    phone, email, address, businessHours,
+    lineAddFriendUrl, facebook, instagram, jgbSmartUrl
+  }`,
+  // 團隊成員（依 order asc 排序）
+  teamList: `*[_type == "team"] | order(order asc){
+    _id, name, role, bio, specialties, order, "photo": photo.asset->url
+  }`,
+  // 獲獎榮耀（依 year desc 排序）
+  awardsList: `*[_type == "award"] | order(year desc, order asc){
+    _id, title, year, organization, description, order, "certificate": certificate.asset->url
+  }`,
+  // 相關企業（依 order asc 排序）
+  groupCompaniesList: `*[_type == "groupCompany"] | order(order asc){
+    _id, name, role, description, services, website, order, "logo": logo.asset->url
+  }`,
+  // 社會公益（依 date desc 排序）
+  csrActivitiesList: `*[_type == "csrActivity"] | order(date desc){
+    _id, title, category, year, description, partnerOrg, date, "photo": photo.asset->url
+  }`,
 };

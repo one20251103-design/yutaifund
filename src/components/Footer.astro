@@ -1,13 +1,15 @@
 ---
-import { SITE } from '~/lib/site';
+import { NAV_ITEMS, SITE } from '~/lib/site';
 
 const year = new Date().getFullYear();
 ---
 
 <footer class="border-t border-[var(--color-gold-200)]/40 mt-32 py-16 bg-[var(--color-cream-50)]">
   <div class="max-w-7xl mx-auto px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-      <div>
+    <!-- 上半部：品牌 + 導覽 -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
+      <!-- 品牌 -->
+      <div class="col-span-2 md:col-span-3 lg:col-span-1">
         <div class="mb-4">
           <p class="text-lg font-medium tracking-wider text-[var(--color-ink-900)]">
             {SITE.name}
@@ -21,33 +23,57 @@ const year = new Date().getFullYear();
         </p>
       </div>
 
-      <div>
-        <p class="text-sm font-medium text-[var(--color-ink-900)] mb-4 tracking-[0.15em]">
-          聯絡資訊
-        </p>
-        <ul class="space-y-2.5 text-sm text-[var(--color-ink-500)]">
-          <li>
-            <a
-              href={`tel:${SITE.phone}`}
-              class="hover:text-[var(--color-gold-500)] transition-colors"
-            >
-              {SITE.phone}
+      <!-- 五大導覽分組 -->
+      {NAV_ITEMS.map((item) => (
+        <div>
+          <p class="text-xs font-medium text-[var(--color-ink-900)] mb-4 tracking-[0.15em]">
+            <a href={item.href} class="hover:text-[var(--color-gold-500)] transition-colors">
+              {item.label}
             </a>
-          </li>
-          <li>
-            <a
-              href={`mailto:${SITE.email}`}
-              class="hover:text-[var(--color-gold-500)] transition-colors"
-            >
-              {SITE.email}
-            </a>
-          </li>
-          <li>{SITE.address}</li>
-        </ul>
-      </div>
+          </p>
+          {item.children && (
+            <ul class="space-y-2 text-xs text-[var(--color-ink-500)]">
+              {item.children.map((child) => (
+                <li>
+                  <a
+                    href={child.href}
+                    target={child.external ? '_blank' : undefined}
+                    rel={child.external ? 'noopener noreferrer' : undefined}
+                    class="hover:text-[var(--color-gold-500)] transition-colors"
+                  >
+                    {child.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      ))}
+    </div>
 
+    <!-- 中間：聯絡資訊 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 py-8 border-y border-[var(--color-gold-200)]/30">
       <div>
-        <p class="text-sm font-medium text-[var(--color-ink-900)] mb-4 tracking-[0.15em]">
+        <p class="text-xs font-medium text-[var(--color-ink-900)] mb-3 tracking-[0.15em]">
+          服務專線
+        </p>
+        <a
+          href={`tel:${SITE.phone}`}
+          class="text-base text-[var(--color-ink-700)] hover:text-[var(--color-gold-500)] transition-colors tracking-wider"
+        >
+          {SITE.phone}
+        </a>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-[var(--color-ink-900)] mb-3 tracking-[0.15em]">
+          公司地址
+        </p>
+        <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+          {SITE.address}
+        </p>
+      </div>
+      <div>
+        <p class="text-xs font-medium text-[var(--color-ink-900)] mb-3 tracking-[0.15em]">
           即時聯繫
         </p>
         <a
@@ -61,7 +87,8 @@ const year = new Date().getFullYear();
       </div>
     </div>
 
-    <div class="pt-8 border-t border-[var(--color-gold-200)]/30 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--color-ink-500)]">
+    <!-- 底部：版權 + 政策連結 -->
+    <div class="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[var(--color-ink-500)]">
       <p>© {year} {SITE.fullName}</p>
       <div class="flex gap-6">
         <a

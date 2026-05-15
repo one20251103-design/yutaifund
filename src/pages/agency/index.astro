@@ -1,0 +1,104 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { SITE } from '~/lib/site';
+
+const AGENCY_SERVICES = [
+  {
+    id: 'rental',
+    num: '01',
+    title: '租屋資訊',
+    desc: '宜蘭在地住宅與商辦租賃物件，從套房到整棟透天，協助您找到合適的家。',
+    href: '/agency/rental',
+    cta: '查看租屋物件',
+  },
+  {
+    id: 'jgb',
+    num: '02',
+    title: 'JGB 智能租屋',
+    desc: '導入 JGB Smart 智慧化租賃管理系統，從租約、租金、修繕到智能居家設備一站整合，讓房東與租客同享高效租賃體驗。',
+    href: SITE.jgbSmartUrl,
+    external: true,
+    cta: '前往 JGB Smart',
+  },
+  {
+    id: 'ai',
+    num: '03',
+    title: 'House AI 搜尋',
+    desc: 'AI 智能物件媒合系統，輸入條件即可推薦符合需求的物件，省去手動比對的時間成本。',
+    href: '/agency/ai-search',
+    cta: '體驗 AI 搜尋',
+  },
+];
+---
+
+<BaseLayout
+  title="仲介服務"
+  description="鈺泰發行銷提供租屋資訊、JGB 智能租屋系統與 House AI 搜尋，為房東與租客打造高效租賃體驗。"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '仲介服務', href: '/agency' },
+  ]}
+>
+  <section class="pt-32 pb-12">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+        AGENCY
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8 max-w-4xl">
+        從找房到管理<br />三套工具一站到位
+      </h1>
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        無論是租客找房、房東託管或仲介管理，鈺泰發整合在地物件資料庫、智慧租賃系統與 AI 搜尋技術，協助您快速完成媒合。
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-24 lg:pb-32">
+    <div class="container-custom">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {AGENCY_SERVICES.map((service) => (
+          <a
+            href={service.href}
+            target={service.external ? '_blank' : undefined}
+            rel={service.external ? 'noopener noreferrer' : undefined}
+            class="group flex flex-col bg-white border border-[var(--color-gold-200)]/40 p-10 hover:border-[var(--color-gold-400)] hover:shadow-md transition-all duration-300"
+          >
+            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+              {service.num}
+            </p>
+            <h2 class="text-2xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+              {service.title}
+              {service.external && (
+                <span class="inline-block ml-1 text-xs text-[var(--color-ink-500)]" aria-label="開啟新分頁">↗</span>
+              )}
+            </h2>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed mb-6 flex-1">
+              {service.desc}
+            </p>
+            <span class="inline-flex items-center gap-2 text-sm tracking-widest text-[var(--color-gold-600)] group-hover:text-[var(--color-gold-700)]">
+              {service.cta}
+              <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 規格待釐清提示（內部備註用，正式上線可隱藏） -->
+  <section class="py-16 bg-[var(--color-cream-50)] border-t border-[var(--color-gold-200)]/30">
+    <div class="container-custom max-w-3xl">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        SPEC TO BE CONFIRMED
+      </p>
+      <h2 class="text-xl md:text-2xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        本區規格待業主確認
+      </h2>
+      <ul class="space-y-3 text-sm text-[var(--color-ink-500)] leading-relaxed">
+        <li>· <strong class="text-[var(--color-ink-700)]">租屋資訊</strong>：物件來源（自家管理 / JGB 後台串接）、物件數量級、搜尋條件複雜度</li>
+        <li>· <strong class="text-[var(--color-ink-700)]">JGB 智能租屋</strong>：是否已訂閱 JGB Smart？是否需要嵌入物件清單頁面？</li>
+        <li>· <strong class="text-[var(--color-ink-700)]">House AI 搜尋</strong>：AI 對話搜尋 / AI 推薦 / 智能篩選器，三種規格擇一</li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

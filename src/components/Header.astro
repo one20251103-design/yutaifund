@@ -1,6 +1,7 @@
 ---
 import { NAV_ITEMS, SITE } from '~/lib/site';
 import Logo from './Logo.astro';
+import NavIcon from './NavIcon.astro';
 import MobileMenu from './MobileMenu.tsx';
 ---
 
@@ -18,16 +19,98 @@ import MobileMenu from './MobileMenu.tsx';
       <Logo height={88} />
     </a>
 
-    <nav class="hidden lg:flex items-center gap-8">
-      {NAV_ITEMS.map((item) => (
-        <a
-          href={item.href}
-          class="text-[15px] font-medium tracking-[0.06em] text-[var(--color-ink-700)] hover:text-[var(--color-gold-600)] transition-colors duration-200 relative group"
-        >
-          {item.label}
-          <span class="absolute -bottom-1.5 left-0 w-0 h-[1.5px] bg-[var(--color-gold-500)] group-hover:w-full transition-all duration-300"></span>
-        </a>
-      ))}
+    <nav class="hidden lg:flex items-center gap-0.5" data-nav>
+      {NAV_ITEMS.map((item, navIdx) => {
+        const childCount = item.children?.length ?? 0;
+        const colsClass = childCount >= 5 ? 'grid-cols-2' : 'grid-cols-1';
+        const widthClass = childCount >= 5 ? 'w-[600px]' : 'w-[380px]';
+        const id = `nav-${navIdx}`;
+
+        return (
+          <div class="nav-item relative" data-nav-item data-nav-id={id}>
+            <a
+              href={item.href}
+              class="nav-trigger relative inline-flex items-center gap-1.5 px-4 py-3 text-[15px] font-medium tracking-[0.06em] text-[var(--color-ink-700)] hover:text-[var(--color-gold-600)] transition-colors rounded-md hover:bg-[var(--color-cream-50)]"
+              aria-haspopup={item.children ? 'true' : undefined}
+              aria-expanded="false"
+            >
+              {item.label}
+              {item.children && (
+                <svg
+                  class="w-3 h-3 transition-transform duration-300 nav-chevron"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path d="M2 4.5L6 8.5L10 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              )}
+            </a>
+
+            {item.children && (
+              <!-- 不可見的 hover bridge：讓滑鼠在主選項 ↓ dropdown 之間移動時不會中斷 hover -->
+              <div class="nav-dropdown absolute left-1/2 -translate-x-1/2 top-full opacity-0 invisible translate-y-2 transition-all duration-200 pointer-events-none">
+                <!-- 透明 bridge（高 12px，保持 hover） -->
+                <div class="h-3 w-full"></div>
+
+                <div class={`relative ${widthClass}`}>
+                  <!-- 小箭頭 -->
+                  <div class="absolute left-1/2 -translate-x-1/2 -top-1.5 w-3 h-3 rotate-45 bg-[var(--color-cream-50)] border-l border-t border-[var(--color-gold-200)]/60"></div>
+
+                  <div class="relative bg-[var(--color-cream-50)] border border-[var(--color-gold-200)]/60 shadow-2xl rounded-lg overflow-hidden">
+                    <!-- 標題列 -->
+                    <div class="px-5 py-3.5 bg-gradient-to-r from-[var(--color-cream-100)] to-[var(--color-cream-50)] border-b border-[var(--color-gold-200)]/40 flex items-center justify-between">
+                      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-700)] font-display font-medium">
+                        {item.label.toUpperCase()}
+                      </p>
+                      <a href={item.href} class="inline-flex items-center gap-1 text-xs text-[var(--color-ink-700)] hover:text-[var(--color-gold-600)] tracking-wider transition-colors">
+                        看全部
+                        <span aria-hidden="true">→</span>
+                      </a>
+                    </div>
+
+                    <!-- 子項卡片 -->
+                    <div class={`grid ${colsClass} gap-1 p-3`}>
+                      {item.children.map((child) => (
+                        <a
+                          href={child.href}
+                          target={child.external ? '_blank' : undefined}
+                          rel={child.external ? 'noopener noreferrer' : undefined}
+                          class="group/child flex items-start gap-3 p-3 rounded-md hover:bg-white border border-transparent hover:border-[var(--color-gold-300)]/60 hover:shadow-sm transition-all duration-200"
+                        >
+                          {child.icon && (
+                            <span class="flex-shrink-0 w-11 h-11 flex items-center justify-center rounded-md bg-[var(--color-cream-100)] group-hover/child:bg-[var(--color-gold-100)] text-[var(--color-gold-600)] group-hover/child:text-[var(--color-gold-700)] transition-colors">
+                              <NavIcon name={child.icon} class="w-5 h-5" />
+                            </span>
+                          )}
+                          <div class="flex-1 min-w-0">
+                            <p class="text-[15px] font-medium text-[var(--color-ink-900)] group-hover/child:text-[var(--color-gold-700)] transition-colors tracking-wide flex items-center gap-1.5 leading-tight">
+                              {child.label}
+                              {child.external && (
+                                <svg class="w-3 h-3 inline-block opacity-50" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+                                  <path d="M4 2.5h5.5V8M9.5 2.5 3 9"/>
+                                </svg>
+                              )}
+                            </p>
+                            {child.description && (
+                              <p class="mt-1 text-[12px] text-[var(--color-ink-500)] tracking-wider leading-relaxed">
+                                {child.description}
+                              </p>
+                            )}
+                          </div>
+                          <span class="flex-shrink-0 self-center text-[var(--color-gold-500)] opacity-0 group-hover/child:opacity-100 transition-all group-hover/child:translate-x-1 text-lg">
+                            →
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
     </nav>
 
     <MobileMenu client:load />
@@ -35,6 +118,110 @@ import MobileMenu from './MobileMenu.tsx';
 </header>
 
 <script>
+  /**
+   * Dropdown 互動：
+   * - hover 開啟 + 50ms 開啟延遲（避免快速經過誤觸發）
+   * - 滑鼠離開後 200ms 才關（給用戶時間移動到 dropdown）
+   * - 點擊主選項：< 600px 寬時直接導向，> 600px 時切換 dropdown
+   * - 點擊 dropdown 外面任意處：關閉
+   * - ESC：關閉
+   * - scroll：保持開啟（不關閉）
+   */
+  function setupNav() {
+    const navItems = document.querySelectorAll<HTMLElement>('[data-nav-item]');
+    let openItem: HTMLElement | null = null;
+    const timers = new WeakMap<HTMLElement, number>();
+
+    const clearTimer = (item: HTMLElement) => {
+      const t = timers.get(item);
+      if (t) {
+        window.clearTimeout(t);
+        timers.delete(item);
+      }
+    };
+
+    const setActive = (item: HTMLElement, active: boolean) => {
+      const dropdown = item.querySelector<HTMLElement>('.nav-dropdown');
+      const trigger = item.querySelector<HTMLElement>('.nav-trigger');
+      const chevron = item.querySelector<HTMLElement>('.nav-chevron');
+      if (!dropdown) return;
+
+      if (active) {
+        dropdown.classList.remove('opacity-0', 'invisible', 'translate-y-2', 'pointer-events-none');
+        dropdown.classList.add('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
+        if (chevron) chevron.style.transform = 'rotate(180deg)';
+        if (trigger) {
+          trigger.setAttribute('aria-expanded', 'true');
+          trigger.classList.add('bg-[var(--color-cream-50)]', 'text-[var(--color-gold-700)]');
+        }
+      } else {
+        dropdown.classList.add('opacity-0', 'invisible', 'translate-y-2', 'pointer-events-none');
+        dropdown.classList.remove('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
+        if (chevron) chevron.style.transform = '';
+        if (trigger) {
+          trigger.setAttribute('aria-expanded', 'false');
+          trigger.classList.remove('bg-[var(--color-cream-50)]', 'text-[var(--color-gold-700)]');
+        }
+      }
+    };
+
+    const closeAll = (except?: HTMLElement) => {
+      navItems.forEach((it) => {
+        if (it !== except) setActive(it, false);
+      });
+      if (!except) openItem = null;
+    };
+
+    navItems.forEach((item) => {
+      const hasChildren = !!item.querySelector('.nav-dropdown');
+      if (!hasChildren) return;
+
+      // 滑鼠進入：50ms 延遲後開啟，並關閉其他
+      item.addEventListener('mouseenter', () => {
+        clearTimer(item);
+        const t = window.setTimeout(() => {
+          closeAll(item);
+          setActive(item, true);
+          openItem = item;
+        }, 50);
+        timers.set(item, t);
+      });
+
+      // 滑鼠離開：200ms 延遲後關閉（給用戶時間移到 dropdown）
+      item.addEventListener('mouseleave', () => {
+        clearTimer(item);
+        const t = window.setTimeout(() => {
+          setActive(item, false);
+          if (openItem === item) openItem = null;
+        }, 200);
+        timers.set(item, t);
+      });
+
+      // focus 鍵盤友善
+      item.addEventListener('focusin', () => {
+        clearTimer(item);
+        closeAll(item);
+        setActive(item, true);
+        openItem = item;
+      });
+    });
+
+    // ESC 關閉
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAll();
+    });
+
+    // 點 dropdown 之外關閉（不含主選項本身）
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const isInsideNav = target.closest('[data-nav-item]');
+      if (!isInsideNav) closeAll();
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupNav);
+
+  // header scroll 樣式（保留原邏輯）
   const updateHeader = () => {
     const header = document.getElementById('site-header');
     if (!header) return;
@@ -55,7 +242,8 @@ import MobileMenu from './MobileMenu.tsx';
   #site-header.header-scrolled {
     backdrop-filter: blur(16px) saturate(150%);
     -webkit-backdrop-filter: blur(16px) saturate(150%);
-    background-color: rgba(251, 249, 244, 0.85);
-    border-bottom: 1px solid rgba(200, 167, 101, 0.14);
+    background-color: rgba(251, 249, 244, 0.92);
+    border-bottom: 1px solid rgba(200, 167, 101, 0.18);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
   }
 </style>

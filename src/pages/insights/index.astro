@@ -4,14 +4,41 @@ import ArticleCard from '~/components/ArticleCard.astro';
 import { getInsightsList } from '~/lib/content';
 
 const insights = await getInsightsList();
+
+const INSIGHT_TOPICS = [
+  {
+    num: '01',
+    title: '貸款資訊',
+    desc: '房貸種類、額度估算、利率比較與申辦流程，買房前必看的資金規劃指南。',
+    href: '/insights/mortgage',
+    image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1200&q=80&auto=format&fit=crop',
+    cta: '了解貸款',
+  },
+  {
+    num: '02',
+    title: '室內裝修',
+    desc: '從毛胚屋到入住的設計與裝修知識，預算控管、工法選擇、合約注意事項。',
+    href: '/insights/interior',
+    image: 'https://images.unsplash.com/photo-1618219740975-d40978bb7378?w=1200&q=80&auto=format&fit=crop',
+    cta: '裝修指南',
+  },
+  {
+    num: '03',
+    title: '建築工法',
+    desc: '耐震標章、結構工法、建材選用——讀懂建築技術，買房不再霧裡看花。',
+    href: '/insights/construction',
+    image: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&q=80&auto=format&fit=crop',
+    cta: '工法解析',
+  },
+];
 ---
 
 <BaseLayout
-  title="買房指南"
-  description="鈺泰發行銷整理的購屋知識與市場觀察，協助您做出更明智的房地產決策。"
+  title="房市與交易資訊"
+  description="鈺泰發行銷整理的房市新聞、貸款資訊、室內裝修與建築工法等專業知識，協助您做出更明智的房地產決策。"
   breadcrumbs={[
     { name: '首頁', href: '/' },
-    { name: '買房指南', href: '/insights' },
+    { name: '房市與交易資訊', href: '/insights' },
   ]}
 >
   <section class="pt-32 pb-12">
@@ -20,28 +47,99 @@ const insights = await getInsightsList();
         INSIGHTS
       </p>
       <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8">
-        買房指南
+        房市與交易資訊
       </h1>
       <p class="text-base text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
-        從第一次買房到投資置產，我們整理實戰經驗與專業觀察，助您看懂房市、避開地雷。
+        從房市新聞、貸款規劃、室內裝修到建築工法，鈺泰發整理實戰經驗與專業觀察，協助您看懂房市、避開地雷。
       </p>
     </div>
   </section>
 
-  <section class="pb-24 lg:pb-32">
+  <!-- 三大主題分區 -->
+  <section class="pb-16 lg:pb-24">
     <div class="container-custom">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-        {insights.map((item) => (
-          <ArticleCard
-            href={`/insights/${item.slug}`}
-            title={item.title}
-            excerpt={item.excerpt}
-            date={item.publishedAt}
-            category={item.category}
-            coverImage={item.coverImage}
-          />
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        TOPICS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        三大專業主題
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {INSIGHT_TOPICS.map((topic) => (
+          <a
+            href={topic.href}
+            class="group block bg-white border border-[var(--color-gold-200)]/40 hover:border-[var(--color-gold-400)] hover:shadow-md transition-all duration-300"
+          >
+            <div class="aspect-[4/3] overflow-hidden">
+              <img
+                src={topic.image}
+                alt={topic.title}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+            </div>
+            <div class="p-8">
+              <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+                {topic.num}
+              </p>
+              <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+                {topic.title}
+              </h3>
+              <p class="text-sm text-[var(--color-ink-500)] leading-relaxed mb-6">
+                {topic.desc}
+              </p>
+              <span class="inline-flex items-center gap-2 text-sm tracking-widest text-[var(--color-gold-600)] group-hover:text-[var(--color-gold-700)]">
+                {topic.cta}
+                <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+              </span>
+            </div>
+          </a>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- 最新文章 -->
+  <section class="pb-24 lg:pb-32 bg-[var(--color-cream-50)] py-16 lg:py-24">
+    <div class="container-custom">
+      <div class="flex items-end justify-between flex-wrap gap-4 mb-12">
+        <div>
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+            ARTICLES
+          </p>
+          <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)]">
+            專業觀察文章
+          </h2>
+        </div>
+        <a href="/news" class="text-sm tracking-widest text-[var(--color-gold-600)] hover:text-[var(--color-gold-700)]">
+          看所有最新消息 →
+        </a>
+      </div>
+
+      {insights.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {insights.map((item) => (
+            <ArticleCard
+              href={`/insights/${item.slug}`}
+              title={item.title}
+              excerpt={item.excerpt}
+              date={item.publishedAt}
+              category={item.category}
+              coverImage={item.coverImage}
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-white p-12 text-center">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+            內容更新中
+          </p>
+          <p class="text-base text-[var(--color-ink-700)] leading-relaxed">
+            專業文章持續整理中，敬請期待。
+          </p>
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>

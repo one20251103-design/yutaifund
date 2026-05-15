@@ -1,0 +1,109 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import NavIcon from '~/components/NavIcon.astro';
+import { NAV_ITEMS, type NavItem, type NavChild } from '~/lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  parentHref: string; // 例：/about
+  breadcrumbs?: { name: string; href: string }[];
+  eyebrow?: string; // 例：BRAND STORY
+  heroImage?: string;
+  heroImageAlt?: string;
+}
+
+const { title, description, parentHref, breadcrumbs, eyebrow, heroImage, heroImageAlt } = Astro.props;
+
+const parentNav: NavItem | undefined = NAV_ITEMS.find((item) => item.href === parentHref);
+const siblings: readonly NavChild[] = parentNav?.children ?? [];
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  breadcrumbs={breadcrumbs}
+>
+  <!-- Hero -->
+  <section class="pt-32 pb-12">
+    <div class="container-custom">
+      {eyebrow && (
+        <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+          {eyebrow}
+        </p>
+      )}
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8">
+        {title}
+      </h1>
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        {description}
+      </p>
+    </div>
+  </section>
+
+  {heroImage && (
+    <section class="pb-12 lg:pb-16">
+      <div class="container-custom">
+        <div class="aspect-[21/9] overflow-hidden">
+          <img
+            src={heroImage}
+            alt={heroImageAlt ?? title}
+            class="w-full h-full object-cover"
+            loading="eager"
+          />
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- 主內容（由子頁 slot 提供） -->
+  <slot />
+
+  <!-- 同層子頁切換 -->
+  {siblings.length > 0 && (
+    <section class="py-16 lg:py-20 bg-[var(--color-cream-50)] border-t border-[var(--color-gold-200)]/30">
+      <div class="container-custom">
+        <div class="flex items-end justify-between flex-wrap gap-4 mb-10">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display">
+            MORE IN {parentNav?.label.toUpperCase()}
+          </p>
+          <a href={parentHref} class="text-xs tracking-widest text-[var(--color-ink-500)] hover:text-[var(--color-gold-600)]">
+            回到 {parentNav?.label} →
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          {siblings.map((child) => {
+            const isActive = child.href === currentPath || child.href === `${currentPath}/`;
+            return (
+              <a
+                href={child.href}
+                target={child.external ? '_blank' : undefined}
+                rel={child.external ? 'noopener noreferrer' : undefined}
+                class={`group flex flex-col items-start p-4 rounded-md border transition-all duration-200 ${
+                  isActive
+                    ? 'bg-white border-[var(--color-gold-400)] shadow-sm'
+                    : 'bg-white/60 border-[var(--color-gold-200)]/40 hover:border-[var(--color-gold-400)] hover:bg-white'
+                }`}
+              >
+                {child.icon && (
+                  <span class={`w-9 h-9 flex items-center justify-center rounded-md mb-3 transition-colors ${
+                    isActive ? 'bg-[var(--color-gold-100)] text-[var(--color-gold-700)]' : 'bg-[var(--color-cream-100)] text-[var(--color-gold-600)] group-hover:bg-[var(--color-gold-100)]'
+                  }`}>
+                    <NavIcon name={child.icon} class="w-4 h-4" />
+                  </span>
+                )}
+                <p class={`text-sm tracking-wide font-light ${
+                  isActive ? 'text-[var(--color-gold-700)]' : 'text-[var(--color-ink-700)] group-hover:text-[var(--color-gold-600)]'
+                }`}>
+                  {child.label}
+                </p>
+              </a>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>

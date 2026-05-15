@@ -1,0 +1,122 @@
+---
+import SubpageLayout from '~/layouts/SubpageLayout.astro';
+import { getGroupCompaniesList } from '~/lib/content';
+
+const groupCompanies = await getGroupCompaniesList();
+
+const SYNERGY = [
+  { num: '01', title: '土地端', desc: '鈺泰建設負責土地評估與開發規劃' },
+  { num: '02', title: '營造端', desc: '瑾展營造主導施工品質與工程進度' },
+  { num: '03', title: '銷售端', desc: '鈺泰發行銷專業代銷與客戶服務' },
+  { num: '04', title: '售後端', desc: '集團整合售後服務與保固管理' },
+];
+---
+
+<SubpageLayout
+  title="相關企業"
+  description="鈺泰發行銷為集團體系下的代銷單位，與建設、營造端深度整合，提供從土地到交屋的完整服務鏈。"
+  parentHref="/about"
+  eyebrow="GROUP"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '關於我們', href: '/about' },
+    { name: '相關企業', href: '/about/group' },
+  ]}
+>
+  <!-- 集團整合 -->
+  <section class="py-16 lg:py-20">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        VERTICAL INTEGRATION
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-4">
+        從土地到交屋的完整服務鏈
+      </h2>
+      <p class="text-sm text-[var(--color-ink-500)] mb-12 max-w-2xl leading-relaxed">
+        集團垂直整合架構，讓建案的每一個環節都有專業團隊把關。
+      </p>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {SYNERGY.map((item) => (
+          <div class="text-center">
+            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-3">
+              {item.num}
+            </p>
+            <h3 class="text-lg font-light text-[var(--color-ink-900)] mb-3 tracking-wider">
+              {item.title}
+            </h3>
+            <p class="text-xs text-[var(--color-ink-500)] leading-relaxed">
+              {item.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 集團成員介紹 -->
+  <section class="py-16 lg:py-20 bg-[var(--color-cream-50)]">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        GROUP COMPANIES
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        集團相關企業
+      </h2>
+
+      {groupCompanies.length === 0 ? (
+        <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-white p-12 text-center">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+            待業主提供
+          </p>
+          <p class="text-base text-[var(--color-ink-700)] leading-relaxed mb-2">
+            集團公司資料整備中
+          </p>
+          <p class="text-sm text-[var(--color-ink-500)]/80 leading-relaxed max-w-xl mx-auto">
+            請至 Sanity Studio 後台「🤝 相關企業」新增公司：名稱、業務、介紹、Logo、官網連結。
+          </p>
+        </div>
+      ) : (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {groupCompanies.map((company) => (
+            <div class="bg-white border border-[var(--color-gold-200)]/40 p-10">
+              {company.logo && (
+                <div class="mb-6 h-12 flex items-center">
+                  <img src={company.logo} alt={company.name} class="h-full w-auto object-contain" loading="lazy" />
+                </div>
+              )}
+              <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+                {company.role}
+              </p>
+              <h3 class="text-2xl font-light text-[var(--color-ink-900)] mb-5 tracking-wider">
+                {company.name}
+              </h3>
+              <p class="text-sm text-[var(--color-ink-500)] leading-relaxed mb-6">
+                {company.description}
+              </p>
+              {company.services && company.services.length > 0 && (
+                <div class="pt-6 border-t border-[var(--color-gold-200)]/30">
+                  <p class="text-xs tracking-[0.2em] text-[var(--color-ink-700)] mb-3">
+                    主要業務
+                  </p>
+                  <div class="flex flex-wrap gap-2">
+                    {company.services.map((s) => (
+                      <span class="text-[11px] px-2.5 py-1 bg-[var(--color-cream-50)] text-[var(--color-ink-700)] tracking-wider">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {company.website && (
+                <a href={company.website} target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 mt-6 text-xs tracking-widest text-[var(--color-gold-600)] hover:text-[var(--color-gold-700)]">
+                  造訪官網 →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</SubpageLayout>

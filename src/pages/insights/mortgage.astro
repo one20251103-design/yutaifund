@@ -1,0 +1,170 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import { SITE } from '~/lib/site';
+
+const LOAN_TYPES = [
+  {
+    name: '一般房貸',
+    desc: '銀行最常見的房屋抵押貸款，利率穩定、額度高，適合自住或長期持有。',
+    rate: '約 2.0% ~ 2.6%（指標利率 + 加碼）',
+    term: '最長 30 年',
+  },
+  {
+    name: '青年首購貸款',
+    desc: '40 歲以下首次購屋者專案，利率較低、寬限期較長，為政府支持方案之一。',
+    rate: '約 1.7% ~ 2.2%',
+    term: '最長 40 年',
+  },
+  {
+    name: '理財型房貸',
+    desc: '已還款部分可隨借隨還，靈活運用資金，但利率較一般房貸高。',
+    rate: '約 2.5% ~ 3.5%',
+    term: '依方案而定',
+  },
+  {
+    name: '中古屋貸款',
+    desc: '中古屋估價會影響貸款成數，屋齡較高需特別注意鑑價結果。',
+    rate: '約 2.1% ~ 2.8%',
+    term: '依屋齡而定（屋齡越高、年限越短）',
+  },
+];
+
+const LOAN_PROCESS = [
+  { step: '01', title: '財務評估', desc: '依您的所得、負債、職業計算可申貸額度與月付能力。' },
+  { step: '02', title: '選擇方案', desc: '比較 3–5 家銀行的利率、寬限期、提前還款條件。' },
+  { step: '03', title: '備齊文件', desc: '身分證、財力證明、購屋契約、不動產謄本等申請文件。' },
+  { step: '04', title: '銀行鑑價', desc: '銀行委託估價師到物件實地評估，作為核貸金額依據。' },
+  { step: '05', title: '對保簽約', desc: '銀行核貸後簽立貸款契約、抵押權設定。' },
+  { step: '06', title: '撥款交屋', desc: '完成抵押權設定後銀行撥款，順利完成交屋。' },
+];
+---
+
+<BaseLayout
+  title="貸款資訊"
+  description="房貸種類、利率比較、額度試算與申貸流程，鈺泰發行銷為您整理買房前必知的資金規劃指南。"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '房市與交易資訊', href: '/insights' },
+    { name: '貸款資訊', href: '/insights/mortgage' },
+  ]}
+>
+  <section class="pt-32 pb-12">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.4em] text-[var(--color-gold-500)] font-display mb-6">
+        MORTGAGE
+      </p>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-light tracking-wide leading-tight text-[var(--color-ink-900)] mb-8">
+        房貸資訊
+      </h1>
+      <p class="text-base md:text-lg text-[var(--color-ink-500)] max-w-2xl leading-relaxed">
+        從青年首購到理財型房貸，了解各種貸款方案的差異，才能找到最適合您的資金規劃方式。
+      </p>
+    </div>
+  </section>
+
+  <!-- 貸款種類 -->
+  <section class="pb-16 lg:pb-24">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        LOAN TYPES
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        常見房貸類型
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {LOAN_TYPES.map((loan) => (
+          <div class="bg-white border border-[var(--color-gold-200)]/40 p-8">
+            <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-4 tracking-wider">
+              {loan.name}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed mb-5">
+              {loan.desc}
+            </p>
+            <div class="space-y-2 text-xs text-[var(--color-ink-700)] tracking-wider">
+              <p><span class="text-[var(--color-gold-500)]">利率：</span>{loan.rate}</p>
+              <p><span class="text-[var(--color-gold-500)]">年限：</span>{loan.term}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p class="mt-8 text-xs text-[var(--color-ink-500)]/70 tracking-wider">
+        ※ 以上利率與年限為市場參考值，實際條件依各銀行與申請人狀況而異。
+      </p>
+    </div>
+  </section>
+
+  <!-- 申辦流程 -->
+  <section class="pb-16 lg:pb-24 bg-[var(--color-cream-50)] py-16">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        PROCESS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        房貸申辦六步驟
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {LOAN_PROCESS.map((item) => (
+          <div class="bg-white border border-[var(--color-gold-200)]/40 p-6">
+            <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-3">
+              STEP {item.step}
+            </p>
+            <h3 class="text-lg font-light text-[var(--color-ink-900)] mb-3 tracking-wider">
+              {item.title}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+              {item.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 試算機 placeholder -->
+  <section class="pb-16 lg:pb-24">
+    <div class="container-custom max-w-3xl">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        CALCULATOR
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-8">
+        房貸月付試算
+      </h2>
+
+      <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-[var(--color-cream-50)]/40 p-12 text-center">
+        <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+          開發中
+        </p>
+        <p class="text-base text-[var(--color-ink-700)] leading-relaxed mb-2">
+          線上房貸試算機
+        </p>
+        <p class="text-sm text-[var(--color-ink-500)]/80 leading-relaxed max-w-xl mx-auto">
+          輸入貸款金額、利率與年限，立即試算每月應付金額。預計上線時間：開發週期約 3 小時。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-20 bg-[var(--color-cream-50)] border-t border-[var(--color-gold-200)]/30">
+    <div class="container-custom max-w-3xl text-center">
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-6">
+        想了解更詳細的貸款規劃？
+      </h2>
+      <p class="text-sm text-[var(--color-ink-500)] mb-8 leading-relaxed">
+        鈺泰發與多家銀行配合，可協助您比較利率、爭取較佳條件。
+      </p>
+      <a
+        href={SITE.lineAddFriendUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-7 py-3.5 text-white text-sm tracking-wider rounded-full transition-colors"
+        style="background-color: #06C755"
+      >
+        LINE 諮詢貸款規劃
+      </a>
+    </div>
+  </section>
+</BaseLayout>

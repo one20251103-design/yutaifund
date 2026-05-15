@@ -1,0 +1,116 @@
+---
+import SubpageLayout from '~/layouts/SubpageLayout.astro';
+
+const LOCAL_STATS = [
+  { num: '——', label: '累積成交戶數', note: '待業主提供' },
+  { num: '——', label: '中古屋成交件數', note: '待業主提供' },
+  { num: '——', label: '深耕宜蘭年數', note: '待業主提供' },
+  { num: '——', label: '合作建商家數', note: '待業主提供' },
+];
+
+const SERVICE_AREAS = [
+  { area: '礁溪', note: '溫泉宅、度假宅、退休宅熱區' },
+  { area: '宜蘭市', note: '生活機能完善，學區與商圈成熟' },
+  { area: '羅東', note: '商業活動繁盛，交通樞紐' },
+  { area: '五結', note: '田野景觀，新興住宅區' },
+  { area: '頭城', note: '海景宅、衝浪基地' },
+  { area: '冬山', note: '田園生活、自然景觀' },
+];
+---
+
+<SubpageLayout
+  title="在地深耕實績"
+  description="深耕宜蘭多年，累積在地經驗與口碑，了解每一片土地的脈動。"
+  parentHref="/about"
+  eyebrow="LOCAL IMPACT"
+  heroImage="https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=1200&q=80&auto=format&fit=crop"
+  heroImageAlt="宜蘭在地深耕"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '關於我們', href: '/about' },
+    { name: '在地深耕實績', href: '/about/local-impact' },
+  ]}
+>
+  <!-- 實績數字 -->
+  <section class="py-16 lg:py-20">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        BY THE NUMBERS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-12">
+        累積實績
+      </h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 border-y border-[var(--color-gold-200)]/40 py-12">
+        {LOCAL_STATS.map((stat) => (
+          <div class="text-center">
+            <p class="text-4xl md:text-5xl font-light text-[var(--color-gold-500)] mb-3 tracking-wider font-display">
+              {stat.num}
+            </p>
+            <p class="text-sm text-[var(--color-ink-700)] tracking-wider">
+              {stat.label}
+            </p>
+            <p class="mt-1 text-[10px] text-[var(--color-ink-500)]/60 tracking-widest">
+              ({stat.note})
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <p class="mt-8 text-xs text-[var(--color-ink-500)]/70 tracking-wider text-center">
+        ※ 為符合誠信原則，正式數字將於業主提供可驗證資料後揭露。
+      </p>
+    </div>
+  </section>
+
+  <!-- 服務區域 -->
+  <section class="py-16 lg:py-20 bg-[var(--color-cream-50)]">
+    <div class="container-custom">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        SERVICE AREAS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-4">
+        主要服務區域
+      </h2>
+      <p class="text-sm text-[var(--color-ink-500)] mb-12 max-w-2xl leading-relaxed">
+        鈺泰發行銷主要服務範圍涵蓋宜蘭縣全區，特別熟悉以下六個生活圈的物件特性與市場行情。
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {SERVICE_AREAS.map((area) => (
+          <div class="bg-white border border-[var(--color-gold-200)]/40 p-6">
+            <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-3 tracking-wider">
+              {area.area}
+            </h3>
+            <p class="text-sm text-[var(--color-ink-500)] leading-relaxed">
+              {area.note}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 在地理念 -->
+  <section class="py-16 lg:py-20">
+    <div class="container-custom max-w-3xl">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        OUR ROOTS
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-8">
+        紮根宜蘭，理解這片土地
+      </h2>
+      <div class="space-y-6 text-base text-[var(--color-ink-500)] leading-relaxed">
+        <p>
+          地段不只是經緯度。每一條巷弄的氣味、每一個社區的鄰里結構、每一片山景的季節變化，都會影響買家未來十年的居住體驗。
+        </p>
+        <p>
+          鈺泰發行銷紮根宜蘭多年，我們知道礁溪溫泉冬天的霧氣會壟罩到幾點、知道羅東夜市旁哪條巷子可以避開假日車潮、知道頭城沿海哪片土地有東北季風的強度。
+        </p>
+        <p class="text-[var(--color-ink-900)] font-medium pt-4">
+          這些知識不在 Google 地圖上，只在我們十幾年的腳步裡。
+        </p>
+      </div>
+    </div>
+  </section>
+</SubpageLayout>

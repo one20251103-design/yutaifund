@@ -1,0 +1,101 @@
+---
+import SubpageLayout from '~/layouts/SubpageLayout.astro';
+import { getTeamList } from '~/lib/content';
+
+const team = await getTeamList();
+const hasRealData = team.length > 0 && !team[0]?.bio?.includes('深耕宜蘭房地產十餘年，主導多檔');
+---
+
+<SubpageLayout
+  title="專業團隊"
+  description="資深房地產顧問為您提供從物件媒合到合約完成的一站式專業服務。"
+  parentHref="/about"
+  eyebrow="OUR TEAM"
+  breadcrumbs={[
+    { name: '首頁', href: '/' },
+    { name: '關於我們', href: '/about' },
+    { name: '專業團隊', href: '/about/team' },
+  ]}
+>
+  <!-- 團隊成員 -->
+  <section class="py-16 lg:py-20">
+    <div class="container-custom">
+      {team.length === 0 ? (
+        <div class="border border-dashed border-[var(--color-gold-300)]/60 bg-[var(--color-cream-50)]/40 p-12 text-center">
+          <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+            待業主提供
+          </p>
+          <p class="text-base text-[var(--color-ink-700)] leading-relaxed mb-2">
+            團隊成員資料整備中
+          </p>
+          <p class="text-sm text-[var(--color-ink-500)]/80 leading-relaxed max-w-xl mx-auto">
+            請至 Sanity Studio 後台「👥 專業團隊」新增成員：姓名、職稱、介紹、照片、專長。
+          </p>
+        </div>
+      ) : (
+        <>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {team.map((member) => (
+              <div class="group bg-white border border-[var(--color-gold-200)]/40 overflow-hidden hover:shadow-md transition-shadow">
+                <div class="aspect-[3/4] overflow-hidden">
+                  <img
+                    src={member.photo}
+                    alt={`${member.name}・${member.role}`}
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="p-6">
+                  <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-2">
+                    {member.role}
+                  </p>
+                  <h3 class="text-xl font-light text-[var(--color-ink-900)] mb-3 tracking-wider">
+                    {member.name}
+                  </h3>
+                  <p class="text-sm text-[var(--color-ink-500)] leading-relaxed mb-4">
+                    {member.bio}
+                  </p>
+                  {member.specialties && member.specialties.length > 0 && (
+                    <div class="flex flex-wrap gap-2 pt-4 border-t border-[var(--color-gold-200)]/30">
+                      {member.specialties.map((s) => (
+                        <span class="text-[11px] px-2 py-1 bg-[var(--color-cream-50)] text-[var(--color-ink-700)] tracking-wider">
+                          {s}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {!hasRealData && (
+            <p class="mt-12 text-xs text-[var(--color-ink-500)]/70 tracking-wider">
+              ※ 團隊成員為示意資料；請至 Sanity Studio 後台「👥 專業團隊」更新真實資料。
+            </p>
+          )}
+        </>
+      )}
+    </div>
+  </section>
+
+  <!-- 團隊理念 -->
+  <section class="py-16 lg:py-20 bg-[var(--color-cream-50)]">
+    <div class="container-custom max-w-3xl">
+      <p class="text-xs tracking-[0.3em] text-[var(--color-gold-500)] font-display mb-4">
+        OUR VALUES
+      </p>
+      <h2 class="text-2xl md:text-3xl font-light tracking-wide text-[var(--color-ink-900)] mb-8">
+        我們的工作信念
+      </h2>
+      <div class="space-y-6 text-base text-[var(--color-ink-500)] leading-relaxed">
+        <p>
+          我們相信，房地產從業人員的價值不是「成交」，而是「為客戶做出他不後悔的選擇」。
+        </p>
+        <p>
+          每一位團隊成員皆受過完整的物件評估、合約解析與客戶溝通訓練，並持續更新法規與市場動態的知識。我們不追求快速成交，追求的是讓每一位客戶在十年後回頭看，仍然覺得當初的決定是對的。
+        </p>
+      </div>
+    </div>
+  </section>
+</SubpageLayout>
